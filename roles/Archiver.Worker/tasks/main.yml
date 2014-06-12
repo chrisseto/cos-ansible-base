@@ -1,0 +1,20 @@
+- name: Copy celeryd
+  copy: src=celeryd dest=/etc/init.d/celeryd
+
+- name: Create user
+  user:
+    name: celery
+    groups: celery
+    append: yes
+    state: present
+
+- name: Chown logs
+  file: path={{ item }} owner=celery group=celery
+  with_items:
+    - /var/run/celery/
+    - /var/log/celery/
+
+- name: Copy config
+  copy: src=celeryd.j2 dest=/etc/default/celeryd
+  notify:
+    - restart worker
