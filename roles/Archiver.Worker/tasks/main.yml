@@ -1,15 +1,24 @@
 - name: Copy celeryd
-  copy: src=celeryd dest=/etc/init.d/celeryd
+  copy:
+    src: celeryd
+    dest: /etc/init.d/celeryd
+    mode: 664
+
+- name: Create group
+  group:
+    name: celery
+    state: present
 
 - name: Create user
   user:
     name: celery
-    groups: celery
+    group: celery
     append: yes
     state: present
+    createhome: no
 
 - name: Chown logs
-  file: path={{ item }} owner=celery group=celery
+  file: "path={{ item }} owner=celery group=celery state=directory"
   with_items:
     - /var/run/celery/
     - /var/log/celery/

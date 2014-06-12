@@ -1,3 +1,3 @@
 - name: restart worker
-  service: name=/etc/init.d/celeryd state=restarted
+  command: /etc/init.d/celeryd restart
   sudo: yes
