@@ -22,7 +22,7 @@ def provision(inventory='vagranthosts', user='vagrant', sudo=True, verbose=False
          inventory=inventory,
          user=user,
          sudo=sudo,
-         verbose=verbose, extra=extra)
+         verbose=verbose, extra=extra, key=key)
 
 
 @task
