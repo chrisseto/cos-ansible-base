@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from invoke import run, task
 
+
 @task
 def install_roles(force=False, ignore_errors=False):
     command = 'ansible-galaxy install -r roles.txt -p roles'
@@ -11,26 +12,31 @@ def install_roles(force=False, ignore_errors=False):
         command += ' --ignore-errors'
     run(command, pty=True)
 
+
 @task
-def provision(inventory='vagranthosts', user='vagrant', sudo=True, verbose=False, extra=''):
+def provision(inventory='vagranthosts', user='vagrant', sudo=True, verbose=False, extra='', key='~/.vagrant.d/insecure_private_key'):
     """Run the site.yml playbook given an inventory file and a user. Defaults
     to provisioning the vagrant box.
     """
     play(playbook='site.yml',
-        inventory=inventory,
-        user=user,
-        sudo=sudo,
-        verbose=verbose, extra=extra)
+         inventory=inventory,
+         user=user,
+         sudo=sudo,
+         verbose=verbose, extra=extra)
+
 
 @task
-def play(playbook, inventory='vagranthosts', user='vagrant', sudo=True, verbose=False, extra=''):
+def play(playbook, inventory='vagranthosts', user='vagrant', sudo=True, verbose=False, extra='', key=''):
     """Run a playbook. Defaults to using the vagrant inventory and vagrant user."""
-    print('[invoke] Playing {0!r} on {1!r} with user {2!r}...'.format(playbook, inventory, user))
+    print('[invoke] Playing {0!r} on {1!r} with user {2!r}...'.format(
+        playbook, inventory, user))
     cmd = 'ansible-playbook {playbook} -i {inventory} -u {user}'.format(**locals())
     if sudo:
         cmd += ' -s'
     if verbose:
         cmd += ' -vvvv'
+    if key:
+        cmd += ' --private-key=%s' % key
     if extra:
         cmd += ' -e {0!r}'.format(extra)
     print('[invoke] {0!r}'.format(cmd))
@@ -43,11 +49,18 @@ def vssh(user='vagrant'):
 
 
 @task
+def vagrant_recycle():
+    run('vagrant destroy -f')
+    run('vagrant up')
+    provision()
+
+
+@task
 def rkhunter_propupd(group='vagrantbox', inventory='vagranthosts', user='vagrant'):
     """Update rkhunter's baseline file configuration database."""
     cmd = ('ansible {group} -i {inventory} -a '
-        '"rkhunter --propupd" --sudo --ask-sudo-pass').format(
+           '"rkhunter --propupd" --sudo --ask-sudo-pass').format(
         group=group, inventory=inventory
-        )
+    )
     print('[invoke] {0!r}'.format(cmd))
     run(cmd)
