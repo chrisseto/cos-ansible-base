@@ -4,3 +4,5 @@ Ansibles.monit,v1.0.0
 Ansibles.nginx,v1.0.1
 Ansibles.timezone,v1.0.0
 Ansibles.generic-users
+Mayeu.RabbitMQ
+gdamjan.uwsgi
