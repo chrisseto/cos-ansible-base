@@ -1,3 +1,13 @@
+- name: Create log files directory
+  file:
+    path: /var/log/archiver/
+    state: directory
+
+- name: Create log files
+  file:
+    path: /var/log/archiver/foreman.log
+    state: touch
+
 - name: Check if managed by Supervisor
   supervisorctl: name=archiverforeman state=present
   register: foreman_is_managed

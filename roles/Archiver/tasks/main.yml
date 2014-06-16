@@ -6,6 +6,14 @@
     - git
     - python-pip
 
+- name: Ensure virtualenv
+  pip:
+    name: virtualenv
+    state: present
+
+- name: Create virtualenv
+  command: "virtualenv {{ virtualenv_path }}{{ virtualenv_name }} creates={{ virtualenv_path }}{{ virtualenv_name }}/bin/python"
+
 - name: Clone
   git: "repo={{ archiver_repo}} dest=/Archiver/"
 

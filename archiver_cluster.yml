@@ -3,12 +3,12 @@
   roles:
     - role: Mayeu.RabbitMQ
 
-- name: Start foreman
+- name: Setup foreman
   hosts: foreman
   roles:
     - role: Archiver.Foreman
 
-- name: Start workers
+- name: Setup workers
   hosts: workers
   roles:
     - role: Archiver.Worker
