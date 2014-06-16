@@ -8,7 +8,7 @@
   roles:
     - role: Archiver.Foreman
 
-- name: Setup workers
+- name: Start workers
   hosts: workers
   roles:
     - role: Archiver.Worker
