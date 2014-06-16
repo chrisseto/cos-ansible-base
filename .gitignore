@@ -37,6 +37,11 @@ nosetests.xml
 junk
 
 
+# Galaxy metafiles
+##################
+.galaxy_install_info
+
+
 # Local config
 ##############
 
@@ -46,3 +51,4 @@ hosts_vagrant
 .vagrant
 
 group_vars/vagrantbox
+group_vars/archiver
