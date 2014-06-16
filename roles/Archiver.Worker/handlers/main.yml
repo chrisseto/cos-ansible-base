@@ -1,3 +1,9 @@
+- name: start worker
+  supervisorctl:
+    name: celeryd
+    state: started
+
 - name: restart worker
-  command: /etc/init.d/celeryd restart
-  sudo: yes
+  supervisorctl:
+    name: celeryd
+    state: restarted

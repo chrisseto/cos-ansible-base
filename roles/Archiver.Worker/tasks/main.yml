@@ -1,29 +1,23 @@
-- name: Copy celeryd
-  copy:
-    src: celeryd
-    dest: /etc/init.d/celeryd
-    mode: 664
+- name: Check if managed by Supervisor
+  supervisorctl: name=celeryd state=present
+  register: celery_is_managed
+  ignore_errors: true
 
-- name: Create group
-  group:
-    name: celery
+- name: Add to Supervisor
+  template:
+    src: celeryd.conf.j2
+    dest: /etc/supervisor/conf.d/celeryd.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: 'celery_is_managed|failed'
+
+- name: Reload Supervisor
+  supervisorctl:
+    name: celeryd
     state: present
 
-- name: Create user
-  user:
-    name: celery
-    group: celery
-    append: yes
-    state: present
-    createhome: no
-
-- name: Chown logs
-  file: "path={{ item }} owner=celery group=celery state=directory"
-  with_items:
-    - /var/run/celery/
-    - /var/log/celery/
-
-- name: Copy config
-  copy: src=celeryd.j2 dest=/etc/default/celeryd
-  notify:
-    - restart worker
+- name: Start worker
+  supervisorctl:
+    name: celeryd
+    state: restarted

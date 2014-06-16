@@ -1,0 +1,11 @@
+[program:celeryd]
+command=celery worker -A archiver.celery
+directory=/Archiver/
+user=nobody
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/celery/worker.log
+stderr_logfile=/var/log/celery/worker.log
+stopwaitsecs = 600
+killasgroup=true
+priority=998
