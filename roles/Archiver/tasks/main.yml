@@ -2,8 +2,12 @@
   apt: "pkg={{ item }} state=present"
   sudo: yes
   with_items:
-    - par2
     - git
+    - lib32z1-dev
+    - libxml2-dev
+    - libxslt1-dev
+    - par2
+    - python-dev
     - python-pip
 
 - name: Ensure virtualenv
