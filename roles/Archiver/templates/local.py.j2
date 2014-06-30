@@ -1,5 +1,4 @@
-# QUEUE_NAME = 'celeryq'
-FOREMAN_ADDRESS = '{{ master_address }}'
+CALLBACK_ADDRESS = [{% for address in callback_addresses %}'{{ address }}', {% endfor %}]
 
 DEBUG = False
 PORT = {{ master_port }}

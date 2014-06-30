@@ -27,8 +27,9 @@
     name: archiverforeman
     state: present
 
-- name: Start foreman
+- name: Restart foreman
   supervisorctl:
     name: archiverforeman
-    state: started
+    state: restarted
   ignore_errors: yes
+  tags: update

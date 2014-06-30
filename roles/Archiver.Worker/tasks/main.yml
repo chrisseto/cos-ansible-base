@@ -29,8 +29,9 @@
     name: celeryd
     state: present
 
-- name: Start worker
+- name: Restart worker
   supervisorctl:
     name: celeryd
-    state: started
+    state: restarted
   ignore_errors: yes
+  tags: update
