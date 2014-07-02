@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import getpass
+import sys
+import subprocess
+
 from invoke import run, task
+
+
+VAGRANT_INVENTORY = 'vagranthosts'
+SITE_INVENTORY = 'hosts'
 
 
 @task
@@ -14,38 +22,77 @@ def install_roles(force=False, ignore_errors=False):
 
 
 @task
-def provision(inventory='vagranthosts', user='vagrant', sudo=True, verbose=False, extra='', key='~/.vagrant.d/insecure_private_key'):
-    """Run the site.yml playbook given an inventory file and a user. Defaults
-    to provisioning the vagrant box.
-    """
-    play(playbook='site.yml',
-         inventory=inventory,
-         user=user,
-         sudo=sudo,
-         verbose=verbose, extra=extra, key=key)
-
-
-@task
-def play(playbook, inventory='vagranthosts', user='vagrant', sudo=True, verbose=False, extra='', key=''):
-    """Run a playbook. Defaults to using the vagrant inventory and vagrant user."""
+def play(playbook, user, inventory=SITE_INVENTORY, sudo=True, ask_sudo_pass=True,
+         verbose=False, extra='', key=None, limit=None):
+    """Run a playbook. Defaults to using the "hosts" inventory"""
     print('[invoke] Playing {0!r} on {1!r} with user {2!r}...'.format(
-        playbook, inventory, user))
+        playbook, inventory, user)
+    )
     cmd = 'ansible-playbook {playbook} -i {inventory} -u {user}'.format(**locals())
     if sudo:
         cmd += ' -s'
+    if ask_sudo_pass:
+        cmd += ' --ask-sudo-pass'
     if verbose:
         cmd += ' -vvvv'
+    if limit:
+        cmd += ' --limit={0}'.format(limit)
     if key:
-        cmd += ' --private-key=%s' % key
+        cmd += ' --private-key={0}'.format(key)
     if extra:
         cmd += ' -e {0!r}'.format(extra)
-    print('[invoke] {0!r}'.format(cmd))
-    run(cmd, pty=True)
+    run(cmd, echo=True, pty=True)
 
 
 @task
-def vssh(user='vagrant'):
-    run('ssh -p 2222 {0}@localhost'.format(user), pty=True)
+def provision(user, inventory=SITE_INVENTORY, sudo=True, ask_sudo_pass=True,
+              verbose=False, extra='', key=None, limit=None):
+    """Run the provision.yml playbook given an inventory file and a user. Defaults
+    to provisioning the vagrant box.
+    """
+    play(playbook='provision.yml',
+         inventory=inventory,
+         user=user,
+         sudo=sudo,
+         ask_sudo_pass=ask_sudo_pass,
+         verbose=verbose, extra=extra,
+         key=key,
+         limit=limit)
+
+
+@task
+def vplay(playbook, user='vagrant', sudo=True, ask_sudo_pass=False,
+          verbose=False, extra='', key='~/.vagrant.d/insecure_private_key', limit=None):
+    """Run a playbook against the vagrant hosts."""
+    play(playbook,
+         inventory='vagranthosts',
+         user=user,
+         sudo=sudo,
+         verbose=verbose,
+         extra=extra,
+         ask_sudo_pass=ask_sudo_pass,
+         key=key,
+         limit=limit)
+
+
+@task
+def vprovision(user='vagrant', sudo=True, ask_sudo_pass=False,
+               verbose=False, extra='', key='~/.vagrant.d/insecure_private_key', limit=None):
+    """Provision the vagrant box using the provision.yml playbook."""
+    provision(user=user,
+              inventory=VAGRANT_INVENTORY,
+              sudo=sudo,
+              ask_sudo_pass=ask_sudo_pass,
+              verbose=verbose,
+              extra=extra,
+              key=key,
+              limit=limit)
+
+
+@task
+def vssh(user='vagrant', host='192.168.111.222'):
+    # Use subprocess to ssh so that terminal will display correctly
+    subprocess.call('ssh {0}@{1}'.format(user, host), shell=True)
 
 
 @task
@@ -62,5 +109,16 @@ def rkhunter_propupd(group='vagrantbox', inventory='vagranthosts', user='vagrant
            '"rkhunter --propupd" --sudo --ask-sudo-pass').format(
         group=group, inventory=inventory
     )
-    print('[invoke] {0!r}'.format(cmd))
-    run(cmd)
+    run(cmd, echo=True)
+
+
+@task
+def genpass():
+    from passlib.hash import sha256_crypt
+    pw = getpass.getpass('Enter a password: ')
+    pw2 = getpass.getpass('Enter password again: ')
+    if pw != pw2:
+        print("Passwords don't match.")
+        sys.exit(1)
+    print('')
+    print(sha256_crypt.encrypt(pw))
