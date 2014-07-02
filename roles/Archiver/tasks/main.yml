@@ -29,4 +29,5 @@
 
 - name: Configuration
   template: src=local.py.j2 dest=/Archiver/archiver/settings/local.py
+  sudo: yes
   tags: update

@@ -1,7 +1,7 @@
 CALLBACK_ADDRESS = [{% for address in callback_addresses %}'{{ address }}', {% endfor %}]
 
 DEBUG = False
-PORT = {{ master_port }}
+PORT = {{ foreman_port }}
 
 #### FILE STORAGE OPTIONS ####
 BACKEND = 's3'
