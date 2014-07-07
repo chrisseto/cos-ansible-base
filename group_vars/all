@@ -1,0 +1,48 @@
+---
+
+genericusers_groups:
+    - name: "admin"
+    - name: "archiver"
+
+genericusers_users:
+    - name: cseto
+      pass: $5$rounds=110000$9Ch5baYvrHgIyl6Y$7qtrHWqNsMPvIZwj15octu0mgmrgqw.tiDcLfuwTNC1
+      shell: /bin/bash
+      uid: 2000
+      append: yes
+      groups:
+          - sudo
+          - admin
+      ssh_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+DpqR120PSV9hJiB3OVmnphLNKMGbqYGOJzCG5lScWO5OAI4UjgMGfumgkjTKvHo54Sre3f1wqxgy9SUCKVgww1sUnoUNZ/wqhCuYCx6XV+A9wP2ZpfrgMWy+LpJpZtceuyvbElCEO3181q7s2j02U8+cr2j38aR6d1VeFVq8cQKkNjbypOaGXMEDDLbHzLz6469myNoV6/DoQFbPG+Az56DdK09FnaydMXw5G+Rkhz7cGNIIb0fKt+nMY7H4LxrE4P6NxOyhnxx3wxWAh8tcAkPZh252SiYcxXUbrpqOjYLdO7tMyXTTrD1NgsRO4xyqEK8dGB8KWoF1uSBN1093 chrisseto@Chriss-MacBook-Air.local"
+
+    - name: archiver
+      pass: $5$rounds=110000$9Ch5baYvrHgIyl6Y$7qtrHWqNsMPvIZwj15octu0mgmrgqw.tiDcLfuwTNC1
+      shell: /bin/bash
+      uid: 3000
+      append: yes
+      groups:
+        - archiver
+      ssh_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+DpqR120PSV9hJiB3OVmnphLNKMGbqYGOJzCG5lScWO5OAI4UjgMGfumgkjTKvHo54Sre3f1wqxgy9SUCKVgww1sUnoUNZ/wqhCuYCx6XV+A9wP2ZpfrgMWy+LpJpZtceuyvbElCEO3181q7s2j02U8+cr2j38aR6d1VeFVq8cQKkNjbypOaGXMEDDLbHzLz6469myNoV6/DoQFbPG+Az56DdK09FnaydMXw5G+Rkhz7cGNIIb0fKt+nMY7H4LxrE4P6NxOyhnxx3wxWAh8tcAkPZh252SiYcxXUbrpqOjYLdO7tMyXTTrD1NgsRO4xyqEK8dGB8KWoF1uSBN1093 chrisseto@Chriss-MacBook-Air.local"
+
+csf_allowed_ips:
+  - 216.197.66.69
+  - 66.228.46.171
+  - 23.92.16.194
+  - 69.164.210.152
+
+csf_ui_user: root
+csf_ui_password: root
+
+hostname_name: staging-archiver
+
+callback_addresses:
+  - "http://localhost:7000/callback"
+
+## Directory Options ##
+files_directory: files/
+manifest_directory: manifests/
+metadata_directory: filemetadata/
+dirstruct_directory: directorystructures/
+parity_directory: parities/

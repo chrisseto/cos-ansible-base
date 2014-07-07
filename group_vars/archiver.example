@@ -8,18 +8,37 @@ rabbitmq_users_definitions:
     tags:
     - administrator
 
-csf_tcp_in: "22, 15672, 5672, 7000"
-csf_tcp6_in: "22, 15672, 5672, 7000"
+csf_tcp_in: "22, 15672, 5672, 7000, 80"
+csf_tcp6_in: "22, 15672, 5672, 7000, 80"
 
 csf_tcp_out: "15672, 5672, 80, 443, 7000"
 csf_tcp6_out: "15672, 5672, 80, 443, 7000"
 
-s3_access_key: CHANGE ME
-s3_secret_key: CHANGE ME
-s3_bucket: CHANGE ME
+s3_access_key: CHANGME
+s3_secret_key: CHANGME
+s3_bucket: CHANGME
 
-figshare_client_id: CHANG ME
-figshare_client_secret: CHANGE ME
+figshare_client_id: CHANGME
+figshare_client_secret: CHANGEME
 
-callback_addresses:
-  - "http://192.168.111.111:7000/callback"
+rabbitmq_url: "amqp://archiver:archiver@localhost//"
+
+ignore_callback_ssl: yes
+
+nginx_user: archiver
+
+genericusers_users:
+    - name: archiver
+      pass: $5$rounds=110000$9Ch5baYvrHgIyl6Y$7qtrHWqNsMPvIZwj15octu0mgmrgqw.tiDcLfuwTNC1
+      shell: /bin/bash
+      uid: 3000
+      append: yes
+      groups:
+        - archiver
+      ssh_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+DpqR120PSV9hJiB3OVmnphLNKMGbqYGOJzCG5lScWO5OAI4UjgMGfumgkjTKvHo54Sre3f1wqxgy9SUCKVgww1sUnoUNZ/wqhCuYCx6XV+A9wP2ZpfrgMWy+LpJpZtceuyvbElCEO3181q7s2j02U8+cr2j38aR6d1VeFVq8cQKkNjbypOaGXMEDDLbHzLz6469myNoV6/DoQFbPG+Az56DdK09FnaydMXw5G+Rkhz7cGNIIb0fKt+nMY7H4LxrE4P6NxOyhnxx3wxWAh8tcAkPZh252SiYcxXUbrpqOjYLdO7tMyXTTrD1NgsRO4xyqEK8dGB8KWoF1uSBN1093 chrisseto@Chriss-MacBook-Air.local"
+
+genericusers_groups:
+    - name: "archiver"
+
+virtualenv_path: /env/archiver
