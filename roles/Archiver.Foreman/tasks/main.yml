@@ -8,6 +8,33 @@
     path: /var/log/archiver/foreman.log
     state: touch
 
+- name: Create socket directory
+  file:
+    path: /run/uwsgi/
+    state: directory
+    owner: "{{ foreman_user }}"
+
+- name: Copy Nginx configuration
+  template:
+    src: nginx.conf.j2
+    dest: "{{nginx_dir}}/sites-available/default"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Copy uwsgi configuration
+  template:
+    src: uwsgi.ini.j2
+    dest: "/Archiver/uwsgi.ini"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Create user
+  user:
+    name: "{{ foreman_user }}"
+    createhome: no
+
 - name: Check if managed by Supervisor
   supervisorctl: name=archiverforeman state=present
   register: foreman_is_managed
@@ -31,5 +58,9 @@
   supervisorctl:
     name: archiverforeman
     state: restarted
-  ignore_errors: yes
   tags: update
+
+- name: Restart Nginx
+  service:
+    name: nginx
+    state: restarted
