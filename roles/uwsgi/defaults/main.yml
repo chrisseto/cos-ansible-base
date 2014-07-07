@@ -1,1 +1,2 @@
 uwsgi_version: 2.0.5.1
+virtualenv_path: "/env/uwsgi"

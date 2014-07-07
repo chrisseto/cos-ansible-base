@@ -9,4 +9,7 @@
     - libxml2-dev
 
 - name: Install uwsgi with pip
-  pip: name="uwsgi" version="{{ uwsgi_version }}"
+  pip:
+    name: uwsgi
+    version: "{{ uwsgi_version }}"
+    virtualenv: "{{ virtualenv_path }}"
