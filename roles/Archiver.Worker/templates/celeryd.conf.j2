@@ -1,5 +1,5 @@
 [program:celeryd]
-command=/Archiver/Worker
+command={{ virtualenv_path }}/bin/python /Archiver/Worker
 directory=/Archiver/
 user=nobody
 autostart=true

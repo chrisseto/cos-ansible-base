@@ -16,7 +16,7 @@
     state: present
 
 - name: Create virtualenv
-  command: "virtualenv {{ virtualenv_path }}{{ virtualenv_name }} creates={{ virtualenv_path }}{{ virtualenv_name }}/bin/python"
+  command: "virtualenv {{ virtualenv_path }} creates={{ virtualenv_path }}/bin/python"
 
 - name: Clone
   git: "repo={{ archiver_repo}} dest=/Archiver/"
@@ -24,6 +24,7 @@
 
 - name: Python Requirements
   pip:
+    virtualenv: "{{ virtualenv_path }}"
     requirements: /Archiver/requirements.txt
   tags: update
 
