@@ -1,0 +1,4 @@
+foreman_user: archiver
+nginx_dir: "/etc/nginx"
+virtualenv_path: /env/archiver
+foreman_sock: /run/uwsgi/foreman.sock

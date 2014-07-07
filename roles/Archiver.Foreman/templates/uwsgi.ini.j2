@@ -1,0 +1,12 @@
+[uwsgi]
+chdir = /Archiver/
+virtualenv = {{ virtualenv_path }}
+module = wsgi
+callable = app
+processes = 4
+threads = 2
+master
+harakiri = 60
+cpu-affinity = 1
+buffer-size = 8192
+socket = {{ foreman_sock }}

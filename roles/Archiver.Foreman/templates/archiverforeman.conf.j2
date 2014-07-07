@@ -1,8 +1,9 @@
 [program:archiverforeman]
-command=/Archiver/Foreman
 directory=/Archiver/
-user=archiver
+command={{ virtualenv_path }}/bin/uwsgi uwsgi.ini
+user={{ foreman_user }}
 autostart=true
 autorestart=true
 stdout_logfile=/var/log/archiver/foreman.log
 stderr_logfile=/var/log/archiver/foreman.log
+environment=PATH="{{ virtualenv_path }}/bin"
