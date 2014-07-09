@@ -2,11 +2,13 @@
   file:
     path: /var/log/archiver/
     state: directory
+    owner: "{{ foreman_user }}"
 
-- name: Create log files
+- name: Create uwsgi log files directory
   file:
-    path: /var/log/archiver/foreman.log
-    state: touch
+    path: /var/log/uwsgi/
+    state: directory
+    owner: "{{ foreman_user }}"
 
 - name: Create socket directory
   file:
@@ -21,6 +23,7 @@
     owner: root
     group: root
     mode: 0644
+  tags: update
 
 - name: Copy uwsgi configuration
   template:
@@ -29,6 +32,7 @@
     owner: root
     group: root
     mode: 0644
+  tags: update
 
 - name: Create user
   user:
@@ -47,7 +51,9 @@
     owner: root
     group: root
     mode: 0644
-  when: 'foreman_is_managed|failed'
+  when: 'foreman_is_managed is not defined or foreman_is_managed|failed'
+  tags: update
+
 
 - name: Reload Supervisor
   supervisorctl:
@@ -64,3 +70,4 @@
   service:
     name: nginx
     state: restarted
+  tags: update

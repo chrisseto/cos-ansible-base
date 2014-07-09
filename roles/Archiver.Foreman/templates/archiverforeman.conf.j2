@@ -4,6 +4,6 @@ command={{ virtualenv_path }}/bin/uwsgi uwsgi.ini
 user={{ foreman_user }}
 autostart=true
 autorestart=true
-stdout_logfile=/var/log/archiver/foreman.log
-stderr_logfile=/var/log/archiver/foreman.log
+stdout_logfile=/var/log/archiver/foreman.stdout.log
+stderr_logfile=/var/log/archiver/foreman.stderr.log
 environment=PATH="{{ virtualenv_path }}/bin"
