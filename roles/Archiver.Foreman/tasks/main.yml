@@ -54,17 +54,23 @@
   when: 'foreman_is_managed is not defined or foreman_is_managed|failed'
   tags: update
 
-
 - name: Reload Supervisor
   supervisorctl:
     name: archiverforeman
     state: present
+
+- name: Start foreman
+  supervisorctl:
+    name: archiverforeman
+    state: started
+  when: 'foreman_is_managed|failed'
 
 - name: Restart foreman
   supervisorctl:
     name: archiverforeman
     state: restarted
   tags: update
+  when: 'foreman_is_managed is not defined or foreman_is_managed|success'
 
 - name: Restart Nginx
   service:
