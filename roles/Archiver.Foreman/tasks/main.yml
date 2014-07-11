@@ -1,9 +1,3 @@
-- name: Create log files directory
-  file:
-    path: /var/log/archiver/
-    state: directory
-    owner: "{{ foreman_user }}"
-
 - name: Create uwsgi log files directory
   file:
     path: /var/log/uwsgi/
@@ -12,7 +6,7 @@
 
 - name: Create socket directory
   file:
-    path: /run/uwsgi/
+    path: "{{ foreman_sock_dir }}"
     state: directory
     owner: "{{ foreman_user }}"
 
@@ -64,13 +58,15 @@
     name: archiverforeman
     state: started
   when: 'foreman_is_managed|failed'
+  register: foreman_started
+  ignore_errors: true
 
 - name: Restart foreman
   supervisorctl:
     name: archiverforeman
     state: restarted
   tags: update
-  when: 'foreman_is_managed is not defined or foreman_is_managed|success'
+  when: 'foreman_is_managed is not defined or foreman_started|skipped'
 
 - name: Restart Nginx
   service:
