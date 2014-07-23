@@ -19,7 +19,10 @@
   command: "virtualenv {{ virtualenv_path }} creates={{ virtualenv_path }}/bin/python"
 
 - name: Clone
-  git: "repo={{ archiver_repo}} dest=/Archiver/"
+  git:
+    repo: "{{ archiver_repo}}"
+    dest: "/Archiver/"
+    version: "{{archiver_version}}"
   tags: update
 
 - name: Python Requirements
