@@ -24,3 +24,4 @@ archiver
 rabbitmq_url="amqp://archiver:archiver@192.168.111.112//"
 s3_bucket=osfregistrations
 callback_addresses="http://192.168.111.111/callback", "https://192.168.111.1:5000/api/v1/registration/finished/"
+

@@ -1,7 +1,9 @@
 
 
 - name: Install uwsgi apt dependencies
-  apt: pkg="{{ item }}" state="present"
+  apt:
+    pkg: "{{ item }}"
+    state: present
   with_items:
     - build-essential
     - python-dev

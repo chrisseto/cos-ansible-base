@@ -42,8 +42,42 @@ def play(playbook, user, inventory=SITE_INVENTORY, sudo=True, ask_sudo_pass=True
     if extra:
         cmd += ' -e {0!r}'.format(extra)
     if tags:
-        cmd += ' --tags {}'.format(tags)
+        cmd += ' --tags={0!r}'.format(tags)
     run(cmd, echo=True, pty=True)
+
+
+@task
+def deploy(user, inventory=SITE_INVENTORY, verbose=False, extra='', limit=None,
+           key=None, update=False):
+    if update:
+        tags = 'update'
+    else:
+        tags = None
+    play(user=user,
+         playbook='deploy.yml',
+         inventory=inventory,
+         verbose=verbose,
+         limit=limit,
+         key=key,
+         extra=extra,
+         tags=tags
+    )
+
+
+@task
+def deploy_staging(user, inventory=SITE_INVENTORY, verbose=False, extra='',
+                   key=None, update=False):
+    """Executes deploy.yml, limiting only to staging servers."""
+    deploy(user=user, limit='osf-staging', inventory=inventory, verbose=verbose,
+           extra=extra, key=key, update=update)
+
+
+@task
+def deploy_production(user, inventory=SITE_INVENTORY, verbose=False, extra='',
+                      key=None, update=False):
+    """Executes deploy.yml, limiting only to production servers."""
+    deploy(user=user, limit='osf-production', inventory=inventory, verbose=verbose,
+           extra=extra, key=key, update=update)
 
 
 @task
@@ -90,6 +124,18 @@ def vprovision(user='vagrant', sudo=True, ask_sudo_pass=False,
               extra=extra,
               key=key,
               limit=limit)
+
+@task
+def vdeploy(user='vagrant', verbose=False, extra='', limit=None,
+            key='~/.vagrant.d/insecure_private_key'):
+    deploy(
+        user=user,
+        inventory=VAGRANT_INVENTORY,
+        verbose=verbose,
+        limit=limit,
+        key=key,
+        extra=extra
+    )
 
 
 @task

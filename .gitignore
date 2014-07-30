@@ -55,3 +55,4 @@ group_vars/archiver
 !.gitkeep
 
 tempfiles
+.konchrc

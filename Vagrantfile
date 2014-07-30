@@ -16,7 +16,7 @@ BOX_IP_END    = ENV['BOX_IP_END']    || 111
 BOX_MEMORY    = ENV['BOX_MEMORY']    || "800"
 BOX_CPUS      = ENV['BOX_CPUS']      || "1"
 BOX_DOCKER    = ENV['BOX_DOCKER']    || false
-NODE_NUMBER   = ENV['NODE_NUMBER']   || 5
+NODE_NUMBER   = ENV['NODE_NUMBER']   || 3
 
 
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
@@ -40,4 +40,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
     end
   end
-end
+
