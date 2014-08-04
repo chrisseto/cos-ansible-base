@@ -22,11 +22,9 @@
   command: tar -xvzf /tmp/nginx-{{nginx_source_version}}.tar.gz chdir=/tmp creates=/tmp/nginx-{{nginx_source_version}}/README
 
 - name: Nginx | Compile the Nginx source
-  shell: >
-    cd /tmp/nginx-{{nginx_source_version}} &&
-    ./configure {{nginx_source_configure_flags}} &&
-    make &&
-    make install
+  shell: "./configure {{nginx_source_configure_flags}} && make && make install"
+  args:
+    chdir: "/tmp/nginx-{{nginx_source_version}}"
 
 - name: Nginx | Update the symbolic link to the nginx install
   file:
