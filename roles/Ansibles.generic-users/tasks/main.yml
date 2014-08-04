@@ -3,7 +3,6 @@
 - name: generic-users | Make sure all groups are present
   group:
     name: "{{item.name}}"
-    gid: "{{item.gid}}"
     state: present
   with_items: genericusers_groups
 
@@ -19,7 +18,7 @@
     groups: "{{','.join(item.groups)}}"
     append: "{{item.append}}"
     password: "{{item.pass}}"
-    comment: ""
+    comment: "{{item.comment}}"
     shell: "{{item.shell}}"
     state: present
   with_items: genericusers_users
