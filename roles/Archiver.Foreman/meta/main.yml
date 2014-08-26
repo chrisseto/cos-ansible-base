@@ -1,5 +1,4 @@
 dependencies:
+  - { role: nginx }
   - { role: Archiver }
   - { role: supervisor}
-  - { role: uwsgi }
-  - { role: nginx }

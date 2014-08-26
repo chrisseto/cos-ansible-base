@@ -1,11 +1,23 @@
+# Enumerate all the Tornado servers here
+upstream tornados {
+{% for index in range(foreman_instances) %}
+    server 127.0.0.1:{{7000 + index}};
+{% endfor %}
+}
+
+
 server {
-    listen   80;
-    server_name  {{inventory_hostname}};
+    listen 80;
 
     access_log  {{nginx_log_dir}}/default.access.log;
 
     location / {
-        include uwsgi_params;
-        uwsgi_pass unix://{{ foreman_sock }};
+        proxy_pass_header Server;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Scheme $scheme;
+        proxy_pass http://tornados;
     }
 }
+

@@ -1,12 +1,11 @@
-- name: Create uwsgi log files directory
-  file:
-    path: /var/log/uwsgi/
-    state: directory
-    owner: "{{ foreman_user }}"
+- name: Create user
+  user:
+    name: "{{ foreman_user }}"
+    createhome: no
 
-- name: Create socket directory
+- name: Create tornado log files directory
   file:
-    path: "{{ foreman_sock_dir }}"
+    path: /var/log/tornado/
     state: directory
     owner: "{{ foreman_user }}"
 
@@ -18,20 +17,6 @@
     group: root
     mode: 0644
   tags: update
-
-- name: Copy uwsgi configuration
-  template:
-    src: uwsgi.ini.j2
-    dest: "/Archiver/uwsgi.ini"
-    owner: root
-    group: root
-    mode: 0644
-  tags: update
-
-- name: Create user
-  user:
-    name: "{{ foreman_user }}"
-    createhome: no
 
 - name: Check if managed by Supervisor
   supervisorctl: name=archiverforeman state=present

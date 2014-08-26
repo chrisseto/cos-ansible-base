@@ -1,9 +1,14 @@
-[program:archiverforeman]
+{% for index in range(foreman_instances) %}
+[program:archiverforeman{{index}}]
 directory=/Archiver/
-command={{ virtualenv_path }}/bin/uwsgi uwsgi.ini
+command={{ virtualenv_path }}/bin/inv server -p {{7000 + index}}
 user={{ foreman_user }}
 autostart=true
 autorestart=true
-stdout_logfile=/var/log/uwsgi/flask.log
-stderr_logfile=/var/log/uwsgi/uwsgi.log
+stdout_logfile=/var/log/tornado/tornado.log
+stderr_logfile=/var/log/tornado/tornado.log
 environment=PATH="{{ virtualenv_path }}/bin"
+{% endfor %}
+
+[group:archiverforeman]
+programs={% for index in range(foreman_instances) %}archiverforeman{{index}}{% if not loop.last %},{% endif %}{% endfor %}

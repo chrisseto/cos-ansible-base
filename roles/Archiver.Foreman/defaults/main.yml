@@ -2,4 +2,4 @@ foreman_user: www-data
 nginx_dir: "/etc/nginx"
 virtualenv_path: /env/archiver
 foreman_sock_dir: /run/uwsgi
-foreman_sock: "{{ foreman_sock_dir }}/uwsgi.sock"
+foreman_instances: 2
