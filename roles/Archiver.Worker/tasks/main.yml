@@ -10,11 +10,6 @@
     state: touch
     mode: 0777
 
-- name: Check if managed by Supervisor
-  supervisorctl: name=celeryd state=present
-  register: celery_is_managed
-  ignore_errors: true
-
 - name: Add to Supervisor
   template:
     src: celeryd.conf.j2
@@ -22,16 +17,25 @@
     owner: root
     group: root
     mode: 0644
-  when: 'celery_is_managed|failed'
+  tags: update
 
 - name: Reload Supervisor
   supervisorctl:
     name: celeryd
     state: present
+  tags: update
+
+- name: Start worker
+  supervisorctl:
+    name: celeryd
+    state: started
+  ignore_errors: true
+  register: worker_started
+  tags: update
 
 - name: Restart worker
   supervisorctl:
     name: celeryd
     state: restarted
-  ignore_errors: yes
+  when: 'worker_started|failed'
   tags: update

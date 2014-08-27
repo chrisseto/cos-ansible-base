@@ -7,9 +7,18 @@ upstream tornados {
 
 
 server {
-    listen 80;
+    listen      80;
+    return 301 https://$host$request_uri;
+}
 
-    access_log  {{nginx_log_dir}}/default.access.log;
+server {
+    listen 443;
+
+    ssl on;
+    ssl_certificate {{ archiver_install_path }}certs/archiver.crt;
+    ssl_certificate_key {{ archiver_install_path }}certs/archiver.key.nopass;
+
+    access_log  {{nginx_log_dir}}/archiver.access.log;
 
     location / {
         proxy_pass_header Server;

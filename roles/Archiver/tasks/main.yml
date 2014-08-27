@@ -18,20 +18,30 @@
 - name: Create virtualenv
   command: "virtualenv {{ virtualenv_path }} creates={{ virtualenv_path }}/bin/python"
 
+- name: "Make sure apps folder exists and is owned by www-data"
+  file:
+    path: "{{ archiver_install_path }}"
+    state: directory
+    recurse: yes
+    mode: 0775
+    owner: www-data
+
 - name: Clone
   git:
     repo: "{{ archiver_repo}}"
-    dest: "/Archiver/"
+    dest: "{{ archiver_install_path }}"
     version: "{{archiver_version}}"
   tags: update
 
 - name: Python Requirements
   pip:
     virtualenv: "{{ virtualenv_path }}"
-    requirements: /Archiver/requirements.txt
+    requirements: "{{ archiver_install_path }}requirements.txt"
   tags: update
 
 - name: Configuration
-  template: src=local.py.j2 dest=/Archiver/archiver/settings/local.py
+  template:
+    src: local.py.j2
+    dest: "{{ archiver_install_path }}archiver/settings/local.py"
   sudo: yes
   tags: update

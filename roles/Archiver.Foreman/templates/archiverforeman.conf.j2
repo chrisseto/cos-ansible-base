@@ -1,6 +1,6 @@
 {% for index in range(foreman_instances) %}
 [program:archiverforeman{{index}}]
-directory=/Archiver/
+directory={{ archiver_install_path }}
 command={{ virtualenv_path }}/bin/inv server -p {{7000 + index}}
 user={{ foreman_user }}
 autostart=true

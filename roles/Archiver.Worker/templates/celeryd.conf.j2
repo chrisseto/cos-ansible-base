@@ -1,6 +1,6 @@
 [program:celeryd]
-command={{ virtualenv_path }}/bin/python /Archiver/Worker
-directory=/Archiver/
+command={{ virtualenv_path }}/bin/invoke worker
+directory={{ archiver_install_path }}
 user=nobody
 autostart=true
 autorestart=true

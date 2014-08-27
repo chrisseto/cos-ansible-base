@@ -56,3 +56,4 @@ group_vars/archiver
 
 tempfiles
 .konchrc
+roles/Archiver.Foreman/files/

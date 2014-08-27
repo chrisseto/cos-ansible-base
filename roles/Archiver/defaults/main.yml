@@ -8,7 +8,7 @@ foreman_port: 7000
 ignore_callback_ssl: no
 rabbitmq_url: "amqp://archiver:archiver@localhost//"
 virtualenv_path: /env/archiver
-archiver_install_path: /Archiver/
+archiver_install_path: /opt/app/Archiver/
 s3_access_key:
 s3_secret_key:
 s3_bucket:

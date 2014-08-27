@@ -9,21 +9,47 @@
     state: directory
     owner: "{{ foreman_user }}"
 
+- name: Create SSL cert directory
+  file:
+    path: "{{ archiver_install_path }}certs/"
+    state: directory
+  tags:
+    - update
+
+- name: Copy SSL cert
+  copy:
+    src: archiver.crt
+    dest: "{{ archiver_install_path }}certs/archiver.crt"
+  tags:
+    - update
+
+- name: Copy SSL key
+  copy:
+    src: archiver.key.nopass
+    dest: "{{ archiver_install_path }}certs/archiver.key.nopass"
+  tags:
+    - update
+
 - name: Copy Nginx configuration
   template:
     src: nginx.conf.j2
-    dest: "{{nginx_dir}}/sites-available/default"
-    owner: root
-    group: root
-    mode: 0644
-  tags: update
+    dest: /etc/nginx/sites-available/archiver.conf
+  tags:
+    - update
 
-- name: Check if managed by Supervisor
-  supervisorctl:
-    name: archiverforeman
-    state: present
-  register: foreman_is_managed
-  ignore_errors: true
+- name: Enable Archiver in nginx
+  file:
+    src: /etc/nginx/sites-available/archiver.conf
+    dest: /etc/nginx/sites-enabled/archiver.conf
+    state: link
+  tags:
+    - update
+
+- name: Disable default nginx site
+  file:
+    path: /etc/nginx/sites-available/default
+    state: absent
+  sudo: yes
 
 - name: Add to Supervisor
   template:
@@ -32,24 +58,27 @@
     owner: root
     group: root
     mode: 0644
-  when: 'foreman_is_managed is not defined or (foreman_is_managed|failed and "already active" in foreman_is_managed)'
-  register: 'foreman_added'
   tags: update
+
+- name: Reload Supervisor
+  supervisorctl:
+    name: archiverforeman
+    state: present
 
 - name: Start foreman
   supervisorctl:
     name: archiverforeman
     state: started
-  when: 'foreman_added is not defined or foreman_added|changed'
   register: foreman_started
   ignore_errors: true
+  tags: update
 
 - name: Restart foreman
   supervisorctl:
     name: archiverforeman
     state: restarted
   tags: update
-  when: 'foreman_is_managed is not defined or foreman_started|skipped'
+  when: 'foreman_started|failed'
 
 - name: Restart Nginx
   service:
