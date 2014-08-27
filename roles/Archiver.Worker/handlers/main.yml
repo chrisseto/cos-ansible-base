@@ -1,9 +1,0 @@
-- name: start worker
-  supervisorctl:
-    name: celeryd
-    state: started
-
-- name: restart worker
-  supervisorctl:
-    name: celeryd
-    state: restarted

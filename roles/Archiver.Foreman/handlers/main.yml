@@ -1,5 +1,0 @@
-- name: restart foreman
-  supervisorctl:
-    name: archiverforeman
-    state: restarted
-  sudo: yes
