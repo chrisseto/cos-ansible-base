@@ -19,7 +19,9 @@
   tags: update
 
 - name: Check if managed by Supervisor
-  supervisorctl: name=archiverforeman state=present
+  supervisorctl:
+    name: archiverforeman
+    state: present
   register: foreman_is_managed
   ignore_errors: true
 
@@ -30,19 +32,15 @@
     owner: root
     group: root
     mode: 0644
-  when: 'foreman_is_managed is not defined or foreman_is_managed|failed'
+  when: 'foreman_is_managed is not defined or (foreman_is_managed|failed and "already active" in foreman_is_managed)'
+  register: 'foreman_added'
   tags: update
-
-- name: Reload Supervisor
-  supervisorctl:
-    name: archiverforeman
-    state: present
 
 - name: Start foreman
   supervisorctl:
     name: archiverforeman
     state: started
-  when: 'foreman_is_managed|failed'
+  when: 'foreman_added is not defined or foreman_added|changed'
   register: foreman_started
   ignore_errors: true
 
