@@ -25,17 +25,17 @@
     state: present
   tags: update
 
-- name: Start worker
-  supervisorctl:
-    name: celeryd
-    state: started
-  ignore_errors: true
-  register: worker_started
-  tags: update
-
 - name: Restart worker
   supervisorctl:
     name: celeryd
     state: restarted
-  when: 'worker_started|failed'
+  ignore_errors: true
+  register: worker_restarted
+  tags: update
+
+- name: Start worker
+  supervisorctl:
+    name: celeryd
+    state: started
+  when: 'worker_restarted|failed'
   tags: update

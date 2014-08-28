@@ -65,23 +65,25 @@
     name: archiverforeman
     state: present
 
-- name: Start foreman
-  supervisorctl:
-    name: archiverforeman
-    state: started
-  register: foreman_started
-  ignore_errors: true
-  tags: update
-
 - name: Restart foreman
   supervisorctl:
-    name: archiverforeman
+    name: 'archiverforeman:'
     state: restarted
+  sudo: yes
+  register: foreman_restarted
+  tags:
+    - update
+
+- name: Start foreman
+  supervisorctl:
+    name: 'archiverforeman:'
+    state: started
+  when: 'foreman_restarted|failed'
   tags: update
-  when: 'foreman_started|failed'
 
 - name: Restart Nginx
   service:
     name: nginx
     state: restarted
-  tags: update
+  tags:
+    - update
