@@ -7,7 +7,7 @@ DEBUG = False
 PORT = {{ foreman_port }}
 
 #### FILE STORAGE OPTIONS ####
-BACKEND = 's3'
+BACKEND = '{{ archiver_storage_backend }}'
 CREATE_PARITIES = True
 IGNORE_PARITIY_SIZE_LIMIT = False
 
