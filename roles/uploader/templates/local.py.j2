@@ -1,0 +1,8 @@
+#!/user/bin/env python
+# encoding: utf-8
+
+DOMAIN = 'http://{{ groups['upload-balancer'][0] }}'
+PORT = 80
+
+{% set user = rabbitmq_users_definitions[0] %}
+BROKER_URL = 'amqp://{{ user['user'] }}:{{ user['password'] }}@localhost:5672/'

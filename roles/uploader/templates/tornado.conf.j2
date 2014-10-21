@@ -1,0 +1,11 @@
+[program:tornado]
+process_name=tornado%(process_num)s
+command={{ uploader_venv }}bin/invoke tornado --port %(process_num)s
+directory={{ uploader_repo_dir }}
+user=www-data
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/uploader/tornado-stdout-%(process_num)s.log
+stderr_logfile=/var/log/uploader/tornado-stderr-%(process_num)s.log
+numprocs={{ uploader_tornado_procs }}
+numprocs_start={{ uploader_tornado_port }}

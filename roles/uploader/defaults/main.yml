@@ -1,0 +1,15 @@
+
+uploader_apps_dir: "/opt/apps/"
+
+uploader_repo_dir: "{{ uploader_apps_dir }}uploader/"
+uploader_repo_branch: "master"
+
+uploader_venvs_dir: "/opt/envs/"
+uploader_venv: "{{ uploader_venvs_dir }}uploader/"
+
+uploader_tornado_port: 14000
+uploader_tornado_procs: 2
+
+# Max upload size (MB)
+uploader_max_body_size: 1024
+

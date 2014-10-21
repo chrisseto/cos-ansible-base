@@ -1,0 +1,9 @@
+[program:celery]
+command={{ uploader_venv }}bin/invoke celery
+directory={{ uploader_repo_dir }}
+user=nobody
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/uploader/celery-stdout.log
+stderr_logfile=/var/log/uploader/celery-stderr.log
+priority=998

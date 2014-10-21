@@ -1,0 +1,27 @@
+
+- name: "Reload process {{ name }}"
+  supervisorctl:
+    name: "{{ name }}"
+    state: present
+  tags:
+    - update
+
+
+- name: "Restart process {{ name }}"
+  supervisorctl:
+    name: "{{ name }}"
+    state: restarted
+  ignore_errors: true
+  register: "process_restarted"
+  tags:
+    - update
+
+
+- name: "Start process {{ name }}"
+  supervisorctl:
+    name: "{{ name }}"
+    state: started
+  when: "process_restarted | failed"
+  tags:
+    - update
+
