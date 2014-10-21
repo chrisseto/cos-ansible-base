@@ -1,0 +1,11 @@
+upstream backend {
+{% for host in groups['uploaders'] %}
+    server {{ host }};
+{% endfor -%}
+}
+
+server {
+    location / {
+        proxy_pass http://backend;
+    }
+}

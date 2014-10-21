@@ -1,0 +1,19 @@
+
+- name: Ensure nginx config
+  template:
+    src: nginx.site.j2
+    dest: /etc/nginx/sites-available/default
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - update
+
+
+- name: Restart nginx
+  service:
+    name: nginx
+    state: restarted
+  tags:
+    - update
+

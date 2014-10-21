@@ -1,0 +1,5 @@
+- name: Set up upload service
+  hosts: upload-balancer
+  roles:
+    - role: nginx
+    - role: upload-balancer
