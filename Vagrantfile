@@ -8,6 +8,9 @@ BOX_IMAGE = ENV['BOX_IMAGE'] || "ubuntu/trusty64"
 BOX_IP_ZONE = ENV['BOX_IP_ZONE'] || "192.168.111"
 BOX_FORWARDED_PORT = ENV['BOX_FORWARDED_PORT'] || 22
 
+UPLOADER_NODES = ENV['UPLOADER_NODES'] || 2
+UPLOADER_START_IP = ENV['UPLOADER_START_IP'] || 227
+
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
@@ -45,6 +48,21 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     staging.vm.provider :virtualbox do |vb|
       vb.customize ["modifyvm", :id, "--memory", "1024"]
+    end
+  end
+
+  config.vm.define "upload-balancer" do |balancer|
+    ip_end = "226"
+    balancer.vm.box = BOX_IMAGE
+    balancer.vm.network :private_network, ip: BOX_IP_ZONE + "." + ip_end
+  end
+
+  UPLOADER_NODES.times do |node_index|
+    node_name = "uploader-#{node_index}"
+    ip_end = UPLOADER_START_IP + node_index
+    config.vm.define node_name do |node_config|
+      node_config.vm.box = BOX_IMAGE
+      node_config.vm.network :private_network, ip: "#{BOX_IP_ZONE}.#{ip_end}"
     end
   end
 
