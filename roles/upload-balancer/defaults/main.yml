@@ -1,8 +1,6 @@
-upload_balancer_ssl: yes
 upload_balancer_ssl_dir: /srv/ssl/
 upload_balancer_ssl_cert: "{{ upload_balancer_ssl_dir }}upload-balancer.crt"
 upload_balancer_ssl_key: "{{ upload_balancer_ssl_dir }}upload-balancer.key"
 
 upload_balancer_ssl_cert_src: include/upload-balancer.crt
 upload_balancer_ssl_key_src: include/upload-balancer.key
-

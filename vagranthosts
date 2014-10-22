@@ -16,3 +16,7 @@
 [upload-workers]
 192.168.111.227
 192.168.111.228
+
+[upload-service:children]
+upload-balancer
+upload-workers

@@ -5,7 +5,7 @@ upstream backend {
 }
 
 server {
-    {% if upload_balancer_ssl -%}
+    {% if upload_service_ssl -%}
     listen 443;
     ssl on;
     ssl_certificate {{ upload_balancer_ssl_cert }};
