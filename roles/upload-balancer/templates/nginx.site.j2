@@ -1,10 +1,19 @@
 upstream backend {
-{% for host in groups['upload-workers'] %}
+    {% for host in groups['upload-workers'] -%}
     server {{ host }};
-{% endfor -%}
+    {% endfor -%}
 }
 
 server {
+    {% if upload_balancer_ssl -%}
+    listen 443;
+    ssl on;
+    ssl_certificate {{ upload_balancer_ssl_cert }};
+    ssl_certificate_key {{ upload_balancer_ssl_key }};
+    {% else -%}
+    listen 80;
+    {% endif %}
+
     location / {
         proxy_pass http://backend;
     }

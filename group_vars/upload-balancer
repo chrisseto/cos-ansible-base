@@ -2,6 +2,9 @@
 
 hostname_name: themiracle
 
+genericusers_groups:
+  - name: upload-balancer
+
 genericusers_users:
   - name: sloria
     pass: $5$rounds=110000$KFYzk9knExlOZeIT$hcbflXBoFa3k1bL6WGlzbnk2Uo1e2fOYbJk2/pcbWg1
@@ -10,6 +13,7 @@ genericusers_users:
     shell: /bin/bash
     groups:
       - sudo
+      - upload-balancer
     append: yes
     ssh_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6D05yHt+UeRI6YAAjnU1yHLS02wVOAIAHnGE3U7axrJdDn49ft94/CNqMqxWo9lDS7VoaxtBQfVZioqRdN+PuCB5lc6hJ1M5oRC+8YN1g8javLUygL7U80VDcSBd/2L5wJI572tJBEUg2R1Syume5RgVIbN2ieEY82AU0TDZZvN1VM0Be7+wSXs1u6Czzq5qulH9GyuJfr83vPmvEW+FIGj1rbR/+t/ghbc/38GZnAvpxWZvi9i4mEV5GME2UqSwiNdE75yMLI89BC/hHymKP5BhQNg1i6MjWchx+PwWrnmyECtuuUbbrDFd6bHlJfKwXA5L8FxjMnHC0NmaQ+5AX sloria@stevens-air
@@ -20,6 +24,7 @@ genericusers_users:
     shell: /bin/bash
     groups:
       - sudo
+      - upload-balancer
     append: yes
     ssh_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5rG7BuOwEHzVvXmlHbOIqpkCcD0IHw683sGcrVM2kCiGZyxhLklF4qTW5DBxEAflNZ7SRU8FfWb81Fb6ywK5aEWrPebYnwV52UyqNv9bElfsFI5osGWLX8KrBTryXb4M0VDHmIbGbE9eBl65H2lsPLYkqkM3A3Mrr4TzxdEa/dKR0cKF2sf7xOs1g0uw6LVLqoii60FB9Lk7/NuiiZ9Wr02zxBVJ0I+mF6jfWBJ8ZPdbzfIAHr7TiPkUdnLOoZHonw5tt/EFt/WdizDKE1Vv9+oEYFAyw3gXD+RAEn9JXX3MDWn/gJGz1htWNJbjAWSwNK6EGb4KdRf5HsR2ENMxZ jm.carp@gmail.com

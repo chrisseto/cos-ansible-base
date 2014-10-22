@@ -1,3 +1,28 @@
+- name: Ensure SSL directory
+  file:
+    path: "{{ upload_balancer_ssl_dir }}"
+    state: directory
+    owner: www-data
+    group: upload-balancer
+    mode: 0775
+  tags:
+    - update
+
+- name: Copy SSL certificate
+  copy:
+    src: "{{ upload_balancer_ssl_cert_src }}"
+    dest: "{{ upload_balancer_ssl_cert }}"
+  when: upload_balancer_ssl
+  tags:
+    - update
+
+- name: Copy SSL key
+  copy:
+    src: "{{ upload_balancer_ssl_key_src }}"
+    dest: "{{ upload_balancer_ssl_key }}"
+  when: upload_balancer_ssl
+  tags:
+    - update
 
 - name: Ensure nginx config
   template:
@@ -9,11 +34,9 @@
   tags:
     - update
 
-
 - name: Restart nginx
   service:
     name: nginx
     state: restarted
   tags:
     - update
-
