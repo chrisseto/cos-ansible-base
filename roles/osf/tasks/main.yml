@@ -1,14 +1,5 @@
 ---
 
-- name: "Make sure apps folder exists and is owned by the osf group"
-  file:
-    path: "{{osf_apps_dir}}"
-    state: directory
-    group: osf
-    recurse: yes
-    mode: 0775
-    owner: www-data
-
 - name: Make sure envs directory exists
   file:
     path: "{{osf_virtualenvs_dir}}"
@@ -36,6 +27,17 @@
     group: osf
     owner: www-data
 
+- name: "Make sure apps folder exists and is owned by the osf group"
+  file:
+    path: "{{ osf_apps_dir }}"
+    state: directory
+    group: osf
+    recurse: yes
+    mode: 0777
+    owner: www-data
+  tags:
+    - update
+
 - name: Pull the latest changes from Github
   git:
     repo: "git@github.com:CenterForOpenScience/osf.git"
@@ -50,14 +52,6 @@
   command: "cp {{osf_repo_dir}}website/settings/local-dist.py {{osf_repo_dir}}website/settings/local.py"
   args:
     creates: "{{osf_repo_dir}}website/settings/local.py"
-
-- name: Update permissions on local.py
-  file:
-    path: /opt/apps/osf/website/settings/local.py
-    state: file
-    mode: 0775
-    owner: www-data
-    group: osf
 
 # update dependencies
 - name: Update bower components
@@ -148,13 +142,13 @@
 - name: Restart uwsgi
   supervisorctl:
     name: uwsgi
-    state: restarted
+    state: started
   tags:
     - update
 
 - name: Restart nginx
   service:
     name: nginx
-    state: restarted
+    state: started
   tags:
     - update

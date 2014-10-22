@@ -23,7 +23,8 @@ genericusers_users:
     ssh_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6D05yHt+UeRI6YAAjnU1yHLS02wVOAIAHnGE3U7axrJdDn49ft94/CNqMqxWo9lDS7VoaxtBQfVZioqRdN+PuCB5lc6hJ1M5oRC+8YN1g8javLUygL7U80VDcSBd/2L5wJI572tJBEUg2R1Syume5RgVIbN2ieEY82AU0TDZZvN1VM0Be7+wSXs1u6Czzq5qulH9GyuJfr83vPmvEW+FIGj1rbR/+t/ghbc/38GZnAvpxWZvi9i4mEV5GME2UqSwiNdE75yMLI89BC/hHymKP5BhQNg1i6MjWchx+PwWrnmyECtuuUbbrDFd6bHlJfKwXA5L8FxjMnHC0NmaQ+5AX sloria@stevens-air
   - name: jmcarp
-    pass: $5$rounds=110000$PB1K0kI0ZbreZsTq$2HGwhAELlAKxU6ewhgVNtphhb0yLHX5Obd3t96xNFM8
+    pass: $5$rounds=110000$KFYzk9knExlOZeIT$hcbflXBoFa3k1bL6WGlzbnk2Uo1e2fOYbJk2/pcbWg1
+    #pass: $5$rounds=110000$PB1K0kI0ZbreZsTq$2HGwhAELlAKxU6ewhgVNtphhb0yLHX5Obd3t96xNFM8
     uid: 4000
     shell: /usr/bin/zsh
     groups:
@@ -69,8 +70,11 @@ csf_lf_alert_from: ""
 csf_lf_sshd_perm: 30
 
 # 22 is required for inbound SSH
-csf_tcp_in: "22"
-csf_tcp6_in: "22"
+csf_tcp_in: "22,80,443"
+csf_tcp6_in: "22,80,443"
+
+csf_tcp_out: "22,80,443"
+csf_tcp6_out: "22,80,443"
 
 # -- lxml
 lxml_virtualenv: "/opt/envs/osf"

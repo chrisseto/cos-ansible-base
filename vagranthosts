@@ -13,6 +13,6 @@
 [upload-balancer]
 192.168.111.226
 
-[uploaders]
+[upload-workers]
 192.168.111.227
 192.168.111.228
