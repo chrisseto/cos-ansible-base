@@ -10,6 +10,3 @@ uploader_log_dir: "/var/log/uploader/"
 
 uploader_tornado_port: 14000
 uploader_tornado_procs: 2
-
-# Max upload size (MB)
-uploader_max_body_size: 1024

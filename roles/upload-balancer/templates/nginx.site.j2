@@ -14,6 +14,8 @@ server {
     listen 80;
     {% endif %}
 
+    client_max_body_size {{ upload_service_max_size }}M;
+
     location / {
         proxy_pass http://backend;
     }

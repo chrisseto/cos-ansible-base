@@ -43,7 +43,7 @@ http {
         listen 80;
 
         # Allow file uploads
-        client_max_body_size {{ uploader_max_body_size }}M;
+        client_max_body_size {{ upload_service_max_size }}M;
 
         location / {
             proxy_pass_header Server;
