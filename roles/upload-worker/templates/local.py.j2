@@ -3,7 +3,7 @@
 
 SCHEME = '{{ 'https' if upload_service_ssl else 'http' }}'
 DOMAIN = '{{ groups['upload-balancer'][0] }}'
-PORT = 80
+PORT = None
 
 {% set user = rabbitmq_users_definitions[0] %}
 BROKER_URL = 'amqp://{{ user['user'] }}:{{ user['password'] }}@localhost:5672/'
