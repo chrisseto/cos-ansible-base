@@ -1,8 +1,8 @@
-
 - name: "Reload process {{ name }}"
   supervisorctl:
     name: "{{ name }}"
     state: present
+  ignore_errors: true
   tags:
     - update
 
@@ -24,4 +24,3 @@
   when: "process_restarted | failed"
   tags:
     - update
-

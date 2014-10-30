@@ -1,4 +1,0 @@
-upload_service_ssl: yes
-
-# Max upload size (MB)
-upload_service_max_size: 1024

@@ -10,13 +10,6 @@
 [osf-staging]
 192.168.111.225
 
-[upload-balancer]
-192.168.111.226
-
 [upload-workers]
+192.168.111.226
 192.168.111.227
-192.168.111.228
-
-[upload-service:children]
-upload-balancer
-upload-workers

@@ -8,5 +8,4 @@ uploader_venv: "{{ uploader_venvs_dir }}uploader/"
 
 uploader_log_dir: "/var/log/uploader/"
 
-uploader_tornado_port: 14000
-uploader_tornado_procs: 2
+uploader_ssl: no

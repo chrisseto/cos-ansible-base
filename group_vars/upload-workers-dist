@@ -1,9 +1,9 @@
 # vi: set ft=yaml :
 
-hostname_name: themiracle
+hostname_name: slightlymad
 
 genericusers_groups:
-  - name: upload-balancer
+  - name: upload-worker
 
 genericusers_users:
   - name: sloria
@@ -12,8 +12,8 @@ genericusers_users:
     uid: 3000
     shell: /bin/bash
     groups:
+      - upload-worker
       - sudo
-      - upload-balancer
     append: yes
     ssh_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6D05yHt+UeRI6YAAjnU1yHLS02wVOAIAHnGE3U7axrJdDn49ft94/CNqMqxWo9lDS7VoaxtBQfVZioqRdN+PuCB5lc6hJ1M5oRC+8YN1g8javLUygL7U80VDcSBd/2L5wJI572tJBEUg2R1Syume5RgVIbN2ieEY82AU0TDZZvN1VM0Be7+wSXs1u6Czzq5qulH9GyuJfr83vPmvEW+FIGj1rbR/+t/ghbc/38GZnAvpxWZvi9i4mEV5GME2UqSwiNdE75yMLI89BC/hHymKP5BhQNg1i6MjWchx+PwWrnmyECtuuUbbrDFd6bHlJfKwXA5L8FxjMnHC0NmaQ+5AX sloria@stevens-air
@@ -23,8 +23,8 @@ genericusers_users:
     uid: 3001
     shell: /bin/bash
     groups:
+      - upload-worker
       - sudo
-      - upload-balancer
     append: yes
     ssh_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC5rG7BuOwEHzVvXmlHbOIqpkCcD0IHw683sGcrVM2kCiGZyxhLklF4qTW5DBxEAflNZ7SRU8FfWb81Fb6ywK5aEWrPebYnwV52UyqNv9bElfsFI5osGWLX8KrBTryXb4M0VDHmIbGbE9eBl65H2lsPLYkqkM3A3Mrr4TzxdEa/dKR0cKF2sf7xOs1g0uw6LVLqoii60FB9Lk7/NuiiZ9Wr02zxBVJ0I+mF6jfWBJ8ZPdbzfIAHr7TiPkUdnLOoZHonw5tt/EFt/WdizDKE1Vv9+oEYFAyw3gXD+RAEn9JXX3MDWn/gJGz1htWNJbjAWSwNK6EGb4KdRf5HsR2ENMxZ jm.carp@gmail.com
@@ -58,6 +58,25 @@ csf_tcp_in: "22,80,443"
 csf_tcp6_in: "22,80,443"
 
 # 21 needed for ftp
-csf_tcp_out: "21,80,443"
-csf_tcp6_out: "21,80,443"
+csf_tcp_out: "21,80,443,5000"
+csf_tcp6_out: "21,80,443,5000"
 
+# --- rabbitmq
+
+rabbitmq_plugins:
+  - rabbitmq_management
+rabbitmq_ssl: no
+rabbitmq_users_definitions:
+  - vhost: /
+    user: upload-worker
+    password: upload-worker
+    tags:
+      - administrator
+
+# --- tornado
+
+uploader_client_class: "changeme"
+uploader_client_options: {}
+uploader_container_name: "changeme"
+
+uploader_sentry_dsn: null

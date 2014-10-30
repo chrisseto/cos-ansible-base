@@ -43,6 +43,8 @@ junk
 hosts
 .vagrant
 
+group_vars/upload-workers
+
 !.gitkeep
 
 tempfiles

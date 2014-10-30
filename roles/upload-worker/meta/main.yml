@@ -1,5 +1,4 @@
 dependencies:
-  - { role: nginx }
   - { role: github }
   - { role: supervisor }
 
