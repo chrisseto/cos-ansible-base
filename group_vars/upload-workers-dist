@@ -73,6 +73,11 @@ rabbitmq_users_definitions:
     tags:
       - administrator
 
+# --- redis
+
+uploader_redis_maxmemory: "{{ 16 * 1024 * 1024 }}"
+
+
 # --- tornado
 
 uploader_client_class: "changeme"

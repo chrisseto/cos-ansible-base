@@ -1,3 +1,12 @@
+- name: Ensure Redis is installed
+  apt:
+    state: present
+    pkg: "{{ item }}"
+  with_items:
+    - "redis-server"
+    - "python-redis"
+
+
 - name: Ensure apps directory
   file:
     path: "{{ uploader_apps_dir }}"
@@ -108,6 +117,24 @@
     owner: root
     group: root
     mode: 0644
+  tags:
+    - update
+
+
+- name: Ensure Redis is running
+  service:
+    name: redis-server
+    state: started
+    enabled: yes
+  tags:
+    - update
+
+
+- name: Ensure Redis configuration
+  redis:
+    command: config
+    name: maxmemory
+    value: "{{ uploader_redis_maxmemory }}"
   tags:
     - update
 
