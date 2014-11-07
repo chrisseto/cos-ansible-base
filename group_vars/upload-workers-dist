@@ -84,4 +84,7 @@ uploader_client_class: "changeme"
 uploader_client_options: {}
 uploader_container_name: "changeme"
 
+uploader_file_path_pending: "/tmp/pending"
+uploader_file_path_complete: "/tmp/complete"
+
 uploader_sentry_dsn: null

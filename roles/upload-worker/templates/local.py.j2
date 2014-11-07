@@ -11,6 +11,9 @@ PORT = {{ 443 if uploader_ssl else 80 }}
 {% set user = rabbitmq_users_definitions[0] %}
 BROKER_URL = 'amqp://{{ user['user'] }}:{{ user['password'] }}@localhost:5672/'
 
+FILE_PATH_PENDING = '{{ uploader_file_path_pending }}'
+FILE_PATH_COMPLETE = '{{ uploader_file_path_complete }}'
+
 STORAGE_CLIENT_CLASS = contrib.{{ uploader_client_class }}
 STORAGE_CLIENT_OPTIONS = {{ uploader_client_options }}
 STORAGE_CONTAINER_NAME =  '{{ uploader_container_name }}'

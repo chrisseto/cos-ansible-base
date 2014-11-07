@@ -1,7 +1,7 @@
 [program:celery]
 command={{ uploader_venv }}bin/invoke celery
 directory={{ uploader_repo_dir }}
-user=nobody
+user=www-data
 autostart=true
 autorestart=true
 stdout_logfile=/var/log/uploader/celery-stdout.log

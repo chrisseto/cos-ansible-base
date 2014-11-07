@@ -37,9 +37,33 @@
 
 
 - name: Create venv
-  command: "virtualenv {{ uploader_venvs_dir }}upload"
+  command: "virtualenv {{ uploader_venv }}"
   args:
-    creates: "{{ uploader_venvs_dir }}upload/bin/python"
+    creates: "{{ uploader_venv }}"
+
+
+- name: Allow www-data to bind to low ports
+  capabilities:
+    path: "{{ uploader_venv }}/bin/python"
+    capability: cap_net_bind_service+ep
+    state: present
+  sudo: yes
+  tags:
+    - update
+
+
+- name: Ensure file directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: www-data
+    group: upload-worker
+    mode: 0755
+  with_items:
+    - "{{ uploader_file_path_pending }}"
+    - "{{ uploader_file_path_complete }}"
+  tags:
+    - update
 
 
 - name: Ensure invoke
