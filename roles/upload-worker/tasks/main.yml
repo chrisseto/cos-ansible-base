@@ -27,6 +27,36 @@
     mode: 0775
 
 
+- name: Ensure SSL directory
+  file:
+    path: "{{ uploader_ssl_dir }}"
+    state: directory
+    owner: www-data
+    group: upload-worker
+    mode: 0775
+  when: uploader_ssl
+  tags:
+    - update
+
+
+- name: Copy SSL certificate
+  copy:
+    src: "{{ uploader_ssl_cert_src }}"
+    dest: "{{ uploader_ssl_cert }}"
+  when: uploader_ssl
+  tags:
+    - update
+
+
+- name: Copy SSL key
+  copy:
+    src: "{{ uploader_ssl_key_src }}"
+    dest: "{{ uploader_ssl_key }}"
+  when: uploader_ssl
+  tags:
+    - update
+
+
 - name: Ensure venv directory
   file:
     path: "{{ uploader_venvs_dir }}"

@@ -4,8 +4,14 @@
 from cloudstorm.backend import contrib
 
 
+USE_SSL = {{ uploader_ssl }}
+{% if uploader_ssl %}
+SSL_CERT_FILE = '{{ uploader_ssl_cert }}'
+SSL_KEY_FILE = '{{ uploader_ssl_key }}'
+{% endif %}
+
 SCHEME = '{{ 'https' if uploader_ssl else 'http' }}'
-DOMAIN = '{{ ansible_default_ipv4['address'] }}'
+DOMAIN = '{{ inventory_hostname }}'
 PORT = {{ 443 if uploader_ssl else 80 }}
 
 {% set user = rabbitmq_users_definitions[0] %}

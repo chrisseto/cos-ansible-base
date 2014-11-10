@@ -9,3 +9,6 @@ uploader_venv: "{{ uploader_venvs_dir }}uploader/"
 uploader_log_dir: "/var/log/uploader/"
 
 uploader_ssl: no
+uploader_ssl_dir: /srv/ssl/
+uploader_ssl_cert: "{{ uploader_ssl_dir }}uploader.crt"
+uploader_ssl_key: "{{ uploader_ssl_dir }}uploader.key"
