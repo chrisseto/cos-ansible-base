@@ -12,6 +12,10 @@ SSL_CERT_FILE = '{{ uploader_ssl_cert }}'
 SSL_KEY_FILE = '{{ uploader_ssl_key }}'
 {% endif %}
 
+URLS_HMAC_SECRET = '{{ uploader_hmac_secret }}'
+UPLOAD_HMAC_SECRET = '{{ uploader_hmac_secret }}'
+WEBHOOK_HMAC_SECRET = '{{ uploader_hmac_secret }}'
+
 SCHEME = '{{ 'https' if uploader_ssl else 'http' }}'
 DOMAIN = '{{ inventory_hostname }}'
 PORT = {{ 443 if uploader_ssl else 80 }}
