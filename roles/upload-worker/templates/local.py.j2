@@ -4,6 +4,8 @@
 from cloudstorm.backend import contrib
 
 
+DEBUG = {{ uploader_tornado_debug }}
+
 USE_SSL = {{ uploader_ssl }}
 {% if uploader_ssl %}
 SSL_CERT_FILE = '{{ uploader_ssl_cert }}'

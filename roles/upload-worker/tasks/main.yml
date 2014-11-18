@@ -1,10 +1,11 @@
-- name: Ensure Redis is installed
+- name: Ensure system dependencies
   apt:
     state: present
     pkg: "{{ item }}"
   with_items:
     - "redis-server"
     - "python-redis"
+    - "logrotate"
 
 
 - name: Ensure apps directory
@@ -168,6 +169,17 @@
   template:
     src: tornado.conf.j2
     dest: /etc/supervisor/conf.d/tornado.conf
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - update
+
+
+- name: Ensure logrotate config
+  template:
+    src: logrotate.j2
+    dest: /etc/logrotate.d/uploader
     owner: root
     group: root
     mode: 0644

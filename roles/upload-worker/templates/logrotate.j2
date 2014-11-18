@@ -1,0 +1,12 @@
+"{{ uploader_log_dir }}celery-*.log" "{{ uploader_log_dir }}tornado-*.log" {
+    daily
+    rotate 0
+    compress
+    delaycompress
+    copytruncate
+    notifempty
+    missingok
+    size 1k
+    create 775 www-data upload-worker
+    su www-data upload-worker
+}

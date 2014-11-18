@@ -80,6 +80,8 @@ uploader_redis_maxmemory: "{{ 16 * 1024 * 1024 }}"
 
 # --- tornado
 
+uploader_tornado_debug: no
+
 uploader_client_class: "changeme"
 uploader_client_options: {}
 uploader_container_name: "changeme"

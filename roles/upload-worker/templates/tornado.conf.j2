@@ -5,5 +5,5 @@ user=www-data
 autostart=true
 autorestart=true
 stopasgroup=true
-stdout_logfile=/var/log/uploader/tornado-stdout.log
-stderr_logfile=/var/log/uploader/tornado-stderr.log
+stdout_logfile={{ uploader_log_dir }}tornado-stdout.log
+stderr_logfile={{ uploader_log_dir }}tornado-stderr.log
