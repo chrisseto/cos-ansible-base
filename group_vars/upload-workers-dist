@@ -98,8 +98,13 @@ uploader_hmac_secret: "changeme"
 uploader_client_class: "changeme"
 uploader_client_options: {}
 uploader_container_name: "changeme"
+uploader_parity_container_name: "changeme"
 
 uploader_file_path_pending: "/tmp/pending"
 uploader_file_path_complete: "/tmp/complete"
+
+uploader_aws_access_key: "changeme"
+uploader_aws_secret_key: "changeme"
+uploader_glacier_vault: "changeme"
 
 uploader_sentry_dsn: null

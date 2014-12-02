@@ -28,6 +28,11 @@ FILE_PATH_COMPLETE = '{{ uploader_file_path_complete }}'
 
 STORAGE_CLIENT_CLASS = contrib.{{ uploader_client_class }}
 STORAGE_CLIENT_OPTIONS = {{ uploader_client_options }}
-STORAGE_CONTAINER_NAME =  '{{ uploader_container_name }}'
+STORAGE_CONTAINER_NAME = '{{ uploader_container_name }}'
+PARITY_CONTAINER_NAME = '{{ uploader_parity_container_name }}'
+
+AWS_ACCESS_KEY = '{{ uploader_aws_access_key }}'
+AWS_SECRET_KEY = '{{ uploader_aws_secret_key }}'
+GLACIER_VAULT = '{{ uploader_glacier_vault }}'
 
 SENTRY_DSN = '{{ uploader_sentry_dsn }}'
