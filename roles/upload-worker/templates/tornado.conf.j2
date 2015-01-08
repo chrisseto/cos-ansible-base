@@ -1,9 +1,0 @@
-[program:tornado]
-command={{ uploader_venv }}bin/invoke tornado
-directory={{ uploader_repo_dir }}
-user=www-data
-autostart=true
-autorestart=true
-stopasgroup=true
-stdout_logfile={{ uploader_log_dir }}tornado-stdout.log
-stderr_logfile={{ uploader_log_dir }}tornado-stderr.log

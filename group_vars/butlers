@@ -1,29 +1,30 @@
 # vi: set ft=yaml :
 
 hostname_name: slightlymad
+# hostname_name:
 
 genericusers_groups:
   - name: waterbutler
 
 genericusers_users:
-  - name: sloria
-    pass: $5$rounds=110000$KFYzk9knExlOZeIT$hcbflXBoFa3k1bL6WGlzbnk2Uo1e2fOYbJk2/pcbWg1
+  - name: cseto
+    pass: $5$rounds=110000$hWWtLDopIrnYFEAw$AuvMG7f4fEwNQkOY772LLBeC3yeHJ69nK0FqQGW2Aj/
     comment: ''
     uid: 3000
     shell: /bin/bash
     groups:
-      - upload-worker
+      - waterbutler
       - sudo
     append: yes
     ssh_keys:
-      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC6D05yHt+UeRI6YAAjnU1yHLS02wVOAIAHnGE3U7axrJdDn49ft94/CNqMqxWo9lDS7VoaxtBQfVZioqRdN+PuCB5lc6hJ1M5oRC+8YN1g8javLUygL7U80VDcSBd/2L5wJI572tJBEUg2R1Syume5RgVIbN2ieEY82AU0TDZZvN1VM0Be7+wSXs1u6Czzq5qulH9GyuJfr83vPmvEW+FIGj1rbR/+t/ghbc/38GZnAvpxWZvi9i4mEV5GME2UqSwiNdE75yMLI89BC/hHymKP5BhQNg1i6MjWchx+PwWrnmyECtuuUbbrDFd6bHlJfKwXA5L8FxjMnHC0NmaQ+5AX sloria@stevens-air
+    - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+DpqR120PSV9hJiB3OVmnphLNKMGbqYGOJzCG5lScWO5OAI4UjgMGfumgkjTKvHo54Sre3f1wqxgy9SUCKVgww1sUnoUNZ/wqhCuYCx6XV+A9wP2ZpfrgMWy+LpJpZtceuyvbElCEO3181q7s2j02U8+cr2j38aR6d1VeFVq8cQKkNjbypOaGXMEDDLbHzLz6469myNoV6/DoQFbPG+Az56DdK09FnaydMXw5G+Rkhz7cGNIIb0fKt+nMY7H4LxrE4P6NxOyhnxx3wxWAh8tcAkPZh252SiYcxXUbrpqOjYLdO7tMyXTTrD1NgsRO4xyqEK8dGB8KWoF1uSBN1093 chrisseto@Chriss-MacBook-Air.local
   - name: jmcarp
     pass: $5$rounds=110000$iAjzRbOYW3CD/p1K$Kv/rPICDBLzhWH4g0oFDHdlnZAnpHWKmIkMzimAGZ6/
     comment: ''
     uid: 3001
     shell: /bin/bash
     groups:
-      - upload-worker
+      - waterbutler
       - sudo
     append: yes
     ssh_keys:
@@ -35,32 +36,32 @@ genericusers_users:
     uid: 3001
     shell: /bin/bash
     groups:
-      - upload-worker
+      - waterbutler
       - sudo
     append: yes
     ssh_keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCr6BXe1LEo4+Gc0rNg0w5IABZTmCGanN25ElvRTOnmRYYQWac2v5dl59RI3uRLBBzo/KYXCGSb2lXNbka8S9C+KCSBA9V5U4Wlau7DuArL0fwl6xMFkKZor+fC2NGLFIpXX39xe2deMrUkIYnO14DJpHdcopCn2yFodOilpsUqqHFuelryYMIXP66uRd6Mquj4ILiBvRWSgmX2HNiS7nrBXgfomlQq5RLQnoOkB6EgG8A1g1/sSg7prwZKQpoJfo/eyXeMbG7trefGDz0vLEuUwXfgByYxkmgOYA6ttyC+GIymXaPV05uRd1HQ6A/5U7M+HikFSnKmfCwINUt1q9h5 michael@Citidel.local
 
 
-# --- network_interfaces
+# # --- network_interfaces
 
-network_interfaces:
-  - name: eth0
-    address: 23.92.21.223
-    netmask: 255.255.255.0
-    gateway: 23.92.21.1
-  - name: eth0:0
-    address: 192.168.162.236
-    netmask: 255.255.128.0
+# network_interfaces:
+#   - name: eth0
+#     address: 23.92.21.223
+#     netmask: 255.255.255.0
+#     gateway: 23.92.21.1
+#   - name: eth0:0
+#     address: 192.168.162.236
+#     netmask: 255.255.128.0
 
-# --- csf
+# # --- csf
 
 csf_allowed_ips:
-  - 66.228.46.171
-  - 23.92.16.194
-  - 69.164.210.152
-csf_lf_alert_to: ""
-csf_lf_alert_from: ""
+#   - 66.228.46.171
+#   - 23.92.16.194
+#   - 69.164.210.152
+# csf_lf_alert_to: ""
+# csf_lf_alert_from: ""
 
 csf_lf_sshd_perm: 30
 
@@ -79,32 +80,32 @@ rabbitmq_plugins:
 rabbitmq_ssl: no
 rabbitmq_users_definitions:
   - vhost: /
-    user: upload-worker
-    password: upload-worker
+    user: waterbutler
+    password: waterbutler
     tags:
       - administrator
 
 # --- redis
 
-uploader_redis_maxmemory: "{{ 16 * 1024 * 1024 }}"
+waterbutler_redis_maxmemory: "{{ 16 * 1024 * 1024 }}"
 
 
 # --- tornado
 
-uploader_tornado_debug: no
+waterbutler_tornado_debug: no
 
-uploader_hmac_secret: "changeme"
+waterbutler_hmac_secret: "changeme"
 
-uploader_client_class: "changeme"
-uploader_client_options: {}
-uploader_container_name: "changeme"
-uploader_parity_container_name: "changeme"
+waterbutler_client_class: "changeme"
+waterbutler_client_options: {}
+waterbutler_container_name: "changeme"
+waterbutler_parity_container_name: "changeme"
 
-uploader_file_path_pending: "/tmp/pending"
-uploader_file_path_complete: "/tmp/complete"
+waterbutler_file_path_pending: "/tmp/pending"
+waterbutler_file_path_complete: "/tmp/complete"
 
-uploader_aws_access_key: "changeme"
-uploader_aws_secret_key: "changeme"
-uploader_glacier_vault: "changeme"
+waterbutler_aws_access_key: "changeme"
+waterbutler_aws_secret_key: "changeme"
+waterbutler_glacier_vault: "changeme"
 
-uploader_sentry_dsn: null
+waterbutler_sentry_dsn: null

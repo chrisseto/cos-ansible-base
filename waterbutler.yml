@@ -1,0 +1,27 @@
+- name: Set up waterbutler workers
+  hosts: butlers
+  roles:
+    - role: python
+    # - role: nginx
+    # - role: rabbitmq
+    - role: waterbutler
+
+- name: Set up HAProxy
+  hosts: waterbalancer
+  roles:
+    - role: info.haproxy
+      haproxy_frontends:
+      - name: 'WaterBalancer'
+        # ip: '123.123.123.120'
+        port: '80'
+        maxconn: '1000'
+        default_backend: 'TheButlers'
+      haproxy_backends:
+      - name: 'TheButlers'
+        description: 'The collection of waterbutler workers'
+        servers:
+          - name: 'butler-01'
+            ip: '192.168.111.111'
+          - name: 'butler-02'
+            ip: '192.168.111.112'
+

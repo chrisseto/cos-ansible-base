@@ -12,8 +12,8 @@ events {
 http {
     # Enumerate all the Tornado servers here
     upstream frontends {
-        {% for incr in range(uploader_tornado_procs) %}
-        server 127.0.0.1:{{ uploader_tornado_port + incr }};
+        {% for incr in range(waterbutler_tornado_procs) %}
+        server 127.0.0.1:{{ waterbutler_tornado_port + incr }};
         {% endfor %}
     }
 

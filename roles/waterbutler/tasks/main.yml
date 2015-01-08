@@ -3,80 +3,81 @@
     state: present
     pkg: "{{ item }}"
   with_items:
+    - "par2"
+    - "logrotate"
+    - "python3-dev"
     - "redis-server"
     - "python-redis"
-    - "logrotate"
-    - "par2"
 
 
 - name: Ensure apps directory
   file:
-    path: "{{ uploader_apps_dir }}"
+    path: "{{ waterbutler_apps_dir }}"
     state: directory
     owner: www-data
-    group: upload-worker
+    group: waterbutler
     recurse: yes
     mode: 0775
 
 
 - name: Ensure log directory
   file:
-    path: "{{ uploader_log_dir }}"
+    path: "{{ waterbutler_log_dir }}"
     state: directory
     owner: www-data
-    group: upload-worker
+    group: waterbutler
     recurse: yes
     mode: 0775
 
 
 - name: Ensure SSL directory
   file:
-    path: "{{ uploader_ssl_dir }}"
+    path: "{{ waterbutler_ssl_dir }}"
     state: directory
     owner: www-data
-    group: upload-worker
+    group: waterbutler
     mode: 0775
-  when: uploader_ssl
+  when: waterbutler_ssl
   tags:
     - update
 
 
 - name: Copy SSL certificate
   copy:
-    src: "{{ uploader_ssl_cert_src }}"
-    dest: "{{ uploader_ssl_cert }}"
-  when: uploader_ssl
+    src: "{{ waterbutler_ssl_cert_src }}"
+    dest: "{{ waterbutler_ssl_cert }}"
+  when: waterbutler_ssl
   tags:
     - update
 
 
 - name: Copy SSL key
   copy:
-    src: "{{ uploader_ssl_key_src }}"
-    dest: "{{ uploader_ssl_key }}"
-  when: uploader_ssl
+    src: "{{ waterbutler_ssl_key_src }}"
+    dest: "{{ waterbutler_ssl_key }}"
+  when: waterbutler_ssl
   tags:
     - update
 
 
 - name: Ensure venv directory
   file:
-    path: "{{ uploader_venvs_dir }}"
+    path: "{{ waterbutler_venvs_dir }}"
     state: directory
     owner: www-data
-    group: upload-worker
+    group: waterbutler
     mode: 0755
 
 
 - name: Create venv
-  command: "virtualenv {{ uploader_venv }}"
+  command: "virtualenv -p python3 {{ waterbutler_venv }}"
   args:
-    creates: "{{ uploader_venv }}"
+    creates: "{{ waterbutler_venv }}"
 
 
 - name: Allow www-data to bind to low ports
   capabilities:
-    path: "{{ uploader_venv }}/bin/python"
+    path: "{{ waterbutler_venv }}bin/python3"
     capability: cap_net_bind_service+ep
     state: present
   sudo: yes
@@ -89,11 +90,11 @@
     path: "{{ item }}"
     state: directory
     owner: www-data
-    group: upload-worker
+    group: waterbutler
     mode: 0755
   with_items:
-    - "{{ uploader_file_path_pending }}"
-    - "{{ uploader_file_path_complete }}"
+    - "{{ waterbutler_file_path_pending }}"
+    - "{{ waterbutler_file_path_complete }}"
   tags:
     - update
 
@@ -101,56 +102,56 @@
 - name: Ensure invoke
   pip:
     name: invoke
-    virtualenv: "{{ uploader_venv }}"
+    virtualenv: "{{ waterbutler_venv }}"
 
 
 - name: Ensure www-data:upload ownership of venv
   file:
-    path: "{{ uploader_venv }}"
+    path: "{{ waterbutler_venv }}"
     state: directory
     recurse: yes
     mode: 0775
-    group: upload-worker
+    group: waterbutler
     owner: www-data
 
 
 - name: Pull from GitHub
   git:
-    repo: "https://github.com/CenterForOpenScience/osf-upload-service"
-    dest: "{{ uploader_repo_dir }}"
-    version: "{{ uploader_repo_branch }}"
+    repo: "https://github.com/CenterForOpenScience/waterbutler"
+    dest: "{{ waterbutler_repo_dir }}"
+    version: "{{ waterbutler_repo_branch }}"
     update: yes
   sudo: False
   tags:
     - update
 
 
-- name: Copy local.py file
-  template:
-    src: local.py.j2
-    dest: "{{ uploader_repo_dir }}cloudstorm/settings/local.py"
-    owner: www-data
-    group: upload-worker
-    mode: 0755
-  tags:
-    - update
+# - name: Copy local.py file
+#   template:
+#     src: local.py.j2
+#     dest: "{{ waterbutler_repo_dir }}cloudstorm/settings/local.py"
+#     owner: www-data
+#     group: waterbutler
+#     mode: 0755
+#   tags:
+#     - update
 
 
 - name: Ensure www-data:upload ownership of repo
   file:
-    path: "{{ uploader_repo_dir }}"
+    path: "{{ waterbutler_repo_dir }}"
     state: directory
     recurse: yes
     mode: 0775
     owner: www-data
-    group: upload-worker
+    group: waterbutler
 
 
 - name: Ensure Python requirements
   pip:
-    requirements: "{{ uploader_repo_dir }}dev-requirements.txt"
+    requirements: "{{ waterbutler_repo_dir }}dev-requirements.txt"
     extra_args: "--upgrade"
-    virtualenv: "{{ uploader_venv }}"
+    virtualenv: "{{ waterbutler_venv }}"
   tags:
     - update
 
@@ -180,7 +181,7 @@
 - name: Ensure logrotate config
   template:
     src: logrotate.j2
-    dest: /etc/logrotate.d/uploader
+    dest: /etc/logrotate.d/waterbutler
     owner: root
     group: root
     mode: 0644
@@ -201,7 +202,7 @@
   redis:
     command: config
     name: maxmemory
-    value: "{{ uploader_redis_maxmemory }}"
+    value: "{{ waterbutler_redis_maxmemory }}"
   tags:
     - update
 

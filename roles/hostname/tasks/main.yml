@@ -15,6 +15,9 @@
     state: present
   when: hostname_name != ""
 
+- debug:
+    msg: "{{hostname_name}}"
+
 - name: Run hostname cmd
   hostname:
     name: "{{hostname_name}}"

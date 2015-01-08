@@ -1,0 +1,14 @@
+waterbutler_apps_dir: "/opt/apps/"
+
+waterbutler_repo_dir: "{{ waterbutler_apps_dir }}waterbutler/"
+waterbutler_repo_branch: "develop"
+
+waterbutler_venvs_dir: "/opt/envs/"
+waterbutler_venv: "{{ waterbutler_venvs_dir }}waterbutler/"
+
+waterbutler_log_dir: "/var/log/waterbutler/"
+
+waterbutler_ssl: no
+waterbutler_ssl_dir: /srv/ssl/
+waterbutler_ssl_cert: "{{ waterbutler_ssl_dir }}waterbutler.crt"
+waterbutler_ssl_key: "{{ waterbutler_ssl_dir }}waterbutler.key"

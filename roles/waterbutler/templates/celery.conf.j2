@@ -1,0 +1,9 @@
+[program:celery]
+command={{ waterbutler_venv }}bin/invoke celery
+directory={{ waterbutler_repo_dir }}
+user=www-data
+autostart=true
+autorestart=true
+stdout_logfile={{ waterbutler_log_dir }}celery-stdout.log
+stderr_logfile={{ waterbutler_log_dir }}celery-stderr.log
+priority=998

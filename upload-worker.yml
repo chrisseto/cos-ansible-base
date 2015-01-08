@@ -1,7 +1,0 @@
-- name: Set up upload service
-  hosts: upload-workers
-  roles:
-    - role: python
-    - role: nginx
-    - role: rabbitmq
-    - role: upload-worker

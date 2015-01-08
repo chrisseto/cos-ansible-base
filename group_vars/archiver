@@ -1,0 +1,66 @@
+# vi:syntax=yaml
+rabbitmq_plugins:
+  - rabbitmq_management
+rabbitmq_ssl        : no
+rabbitmq_users_definitions:
+  - vhost: /
+    user: archiver
+    password: VZ4J5Bhn3ndN9aj4uCqDVd4A2hNWNq4vN7q
+    tags:
+    - administrator
+
+csf_tcp_in: "22, 15672, 5672, 80, 443"
+csf_tcp6_in: "22, 15672, 5672, 80, 443"
+
+csf_tcp_out: "15672, 5672, 80, 443"
+csf_tcp6_out: "15672, 5672, 80, 443"
+
+archiver_storage_backend: rackspace
+archiver_storage_username: openscienceframework
+archiver_storage_password: 8ffb2aa6b74146b6b5e05ede39cc7b49
+archiver_storage_resource: archiver-staging
+
+figshare_client_id: q7xycDtBKb5NTeDZIDBtIw
+figshare_client_secret: c9DJiOohz2pyr2kBG5Eg4g
+
+rabbitmq_url: "amqp://archiver:archiver@localhost//"
+
+ignore_callback_ssl: yes
+
+genericusers_users:
+    - name: cseto
+      pass: $5$rounds=110000$9Ch5baYvrHgIyl6Y$7qtrHWqNsMPvIZwj15octu0mgmrgqw.tiDcLfuwTNC1
+      comment: Needs a comment
+      shell: /bin/bash
+      uid: 2000
+      append: yes
+      groups:
+          - sudo
+          - admin
+      ssh_keys:
+        - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+DpqR120PSV9hJiB3OVmnphLNKMGbqYGOJzCG5lScWO5OAI4UjgMGfumgkjTKvHo54Sre3f1wqxgy9SUCKVgww1sUnoUNZ/wqhCuYCx6XV+A9wP2ZpfrgMWy+LpJpZtceuyvbElCEO3181q7s2j02U8+cr2j38aR6d1VeFVq8cQKkNjbypOaGXMEDDLbHzLz6469myNoV6/DoQFbPG+Az56DdK09FnaydMXw5G+Rkhz7cGNIIb0fKt+nMY7H4LxrE4P6NxOyhnxx3wxWAh8tcAkPZh252SiYcxXUbrpqOjYLdO7tMyXTTrD1NgsRO4xyqEK8dGB8KWoF1uSBN1093 chrisseto@Chriss-MacBook-Air.local"
+
+genericusers_groups:
+    - name: "admin"
+
+virtualenv_path: /env/archiver
+
+callback_addresses:
+  - "http://173.255.232.61/api/v1/archives/callback/"
+  - "https://staging.osf.io/api/v1/registration/finished/"
+
+api_keys:
+  - '79WwgWUHvNkhf8n7h3mxaV3ePvG7vqQFxHn'
+  - 'HfuMxDy6AceN7Vu8hxppdH3yM3yueWQG6qq'
+  - 'hVA67BJA7kYAz9kzYjR7Ewhvb5y2X6PHenQ'
+
+hostname_name: staging-archiver
+
+## Directory Options ##
+files_directory: files/
+manifest_directory: manifests/
+metadata_directory: filemetadata/
+dirstruct_directory: directorystructures/
+parity_directory: parities/
+
+archiver_version: "develop"

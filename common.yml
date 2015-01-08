@@ -2,7 +2,7 @@
 - name: Common Ubuntu setup
   hosts: all
   roles:
-    - role: hostname
+    # - role: hostname
     # - role: network_interfaces
     - role: generic-users
     - role: Ansibles.timezone
