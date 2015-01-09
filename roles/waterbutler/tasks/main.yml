@@ -20,6 +20,16 @@
     mode: 0775
 
 
+- name: Ensure settings directory
+  file:
+    path: "{{ waterbutler_conf_dir }}"
+    state: directory
+    owner: www-data
+    group: waterbutler
+    recurse: yes
+    mode: 0775
+
+
 - name: Ensure log directory
   file:
     path: "{{ waterbutler_log_dir }}"
@@ -126,15 +136,24 @@
     - update
 
 
-# - name: Copy local.py file
-#   template:
-#     src: local.py.j2
-#     dest: "{{ waterbutler_repo_dir }}cloudstorm/settings/local.py"
-#     owner: www-data
-#     group: waterbutler
-#     mode: 0755
-#   tags:
-#     - update
+- name: Install WaterButler
+  command: "{{ waterbutler_venv }}bin/python3 setup.py develop"
+  args:
+    chdir: "{{ waterbutler_repo_dir }}"
+  tags:
+    - update
+
+
+- name: Copy Settings
+  template:
+    src: waterbutler.conf.j2
+    dest: "{{ waterbutler_conf_dir }}server.conf"
+    owner: www-data
+    group: waterbutler
+    mode: 0755
+  tags:
+    - update
+    - settings
 
 
 - name: Ensure www-data:upload ownership of repo
@@ -216,13 +235,14 @@
     - update
 
 
-- name: Ensure celery
-  include: supervisor-restart.yml name=celery
-  tags:
-    - update
+# - name: Ensure celery
+#   include: supervisor-restart.yml name=celery
+#   tags:
+#     - update
 
 
 - name: Ensure tornado
-  include: supervisor-restart.yml name="tornado"
+  include: supervisor-restart.yml name=tornado
   tags:
     - update
+    - settings

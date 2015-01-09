@@ -1,4 +1,11 @@
+waterbutler_port: '80'
+waterbutler_debug: 'False'
+waterbutler_hmac_secret: 'changeme'
+waterbutler_identity_api_url: 'http://192.168.111.1:5000/api/v1/files/auth/'
+
+
 waterbutler_apps_dir: "/opt/apps/"
+waterbutler_conf_dir: "/etc/waterbutler/"
 
 waterbutler_repo_dir: "{{ waterbutler_apps_dir }}waterbutler/"
 waterbutler_repo_branch: "develop"
