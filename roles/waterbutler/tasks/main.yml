@@ -33,7 +33,7 @@
     state: present
 
 
-- name: Ensure system dependencies
+- name: Ensure Docker
   sudo: yes
   apt:
     state: present
@@ -43,7 +43,7 @@
 - name: Copy settings
   copy:
     dest: "{{ waterbutler_config }}"
-    src: "~/.cos/waterbutler-{{ watebutler_env }}.json"
+    src: "~/.cos/waterbutler-{{ waterbutler_env }}.json"
     mode: 0776
 
 
