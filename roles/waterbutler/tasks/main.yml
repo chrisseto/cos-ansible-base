@@ -79,7 +79,7 @@
     image: "centerforopenscience/waterbutler:latest"
     command: invoke-server
     env:
-      ENV: {{ waterbutler_env }}
+      ENV: "{{ waterbutler_env }}"
       SOURCE_BRANCH: develop
       SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
     ports:
@@ -103,7 +103,7 @@
     command: invoke-celery
     restart_policy: always
     env:
-      ENV: {{ waterbutler_env }}
+      ENV: "{{ waterbutler_env }}"
       SOURCE_BRANCH: develop
       SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
     links:
