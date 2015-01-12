@@ -3,9 +3,6 @@
 hostname_name: slightlymad
 # hostname_name:
 
-genericusers_groups:
-  - name: waterbutler
-
 genericusers_users:
   - name: cseto
     pass: $5$rounds=110000$hWWtLDopIrnYFEAw$AuvMG7f4fEwNQkOY772LLBeC3yeHJ69nK0FqQGW2Aj/
@@ -13,7 +10,6 @@ genericusers_users:
     uid: 3000
     shell: /bin/bash
     groups:
-      - waterbutler
       - sudo
     append: yes
     ssh_keys:
@@ -24,7 +20,6 @@ genericusers_users:
     uid: 3001
     shell: /bin/bash
     groups:
-      - waterbutler
       - sudo
     append: yes
     ssh_keys:
@@ -36,7 +31,6 @@ genericusers_users:
     uid: 3001
     shell: /bin/bash
     groups:
-      - waterbutler
       - sudo
     append: yes
     ssh_keys:
@@ -66,46 +60,8 @@ csf_allowed_ips:
 csf_lf_sshd_perm: 30
 
 # 22 is required for inbound SSH
-csf_tcp_in: "22,80,443"
-csf_tcp6_in: "22,80,443"
+csf_tcp_in: "22, 7777"
+csf_tcp6_in: "22, 7777"
 
-# 21 needed for ftp
-csf_tcp_out: "21,80,443,5000"
-csf_tcp6_out: "21,80,443,5000"
-
-# --- rabbitmq
-
-rabbitmq_plugins:
-  - rabbitmq_management
-rabbitmq_ssl: no
-rabbitmq_users_definitions:
-  - vhost: /
-    user: waterbutler
-    password: waterbutler
-    tags:
-      - administrator
-
-# --- redis
-
-waterbutler_redis_maxmemory: "{{ 16 * 1024 * 1024 }}"
-
-
-# --- tornado
-
-waterbutler_tornado_debug: no
-
-waterbutler_hmac_secret: "changeme"
-
-waterbutler_client_class: "changeme"
-waterbutler_client_options: {}
-waterbutler_container_name: "changeme"
-waterbutler_parity_container_name: "changeme"
-
-waterbutler_file_path_pending: "/tmp/pending"
-waterbutler_file_path_complete: "/tmp/complete"
-
-waterbutler_aws_access_key: "changeme"
-waterbutler_aws_secret_key: "changeme"
-waterbutler_glacier_vault: "changeme"
-
-waterbutler_sentry_dsn: null
+csf_tcp_out: "22,80,443"
+csf_tcp6_out: "22,80,443"

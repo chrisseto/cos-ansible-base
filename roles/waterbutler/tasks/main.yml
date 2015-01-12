@@ -33,54 +33,11 @@
     - "logrotate"
 
 
-- name: Ensure apps directory
-  file:
-    path: "{{ waterbutler_apps_dir }}"
-    state: directory
-    owner: www-data
-    group: waterbutler
-    recurse: yes
-    mode: 0775
-
-
-# - name: Ensure settings directory
-#   file:
-#     path: "{{ waterbutler_conf_dir }}"
-#     state: directory
-#     owner: www-data
-#     group: waterbutler
-#     recurse: yes
-#     mode: 0776
-
-
 - name: Copy settings
   copy:
     dest: "{{ waterbutler_config }}"
-    src: "~/.cos/waterbutler-prod.json"
-    owner: www-data
-    group: waterbutler
+    src: "~/.cos/waterbutler-{{ watebutler_env }}.json"
     mode: 0776
-
-
-- name: Ensure log directory
-  file:
-    path: "{{ waterbutler_log_dir }}"
-    state: directory
-    owner: www-data
-    group: waterbutler
-    recurse: yes
-    mode: 0775
-
-
-- name: Ensure logrotate config
-  template:
-    src: logrotate.j2
-    dest: /etc/logrotate.d/waterbutler
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - update
 
 
 - name: Clean up old dockers
@@ -122,7 +79,7 @@
     image: "centerforopenscience/waterbutler:latest"
     command: invoke-server
     env:
-      ENV: prod
+      ENV: {{ waterbutler_env }}
       SOURCE_BRANCH: develop
       SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
     ports:
@@ -146,10 +103,11 @@
     command: invoke-celery
     restart_policy: always
     env:
-      ENV: prod
+      ENV: {{ waterbutler_env }}
       SOURCE_BRANCH: develop
       SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
     links:
+      - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
     volumes:
       - "{{ waterbutler_pending }}:/data/osfstorage/pending"

@@ -1,27 +1,13 @@
-waterbutler_port: '80'
-waterbutler_debug: 'False'
-waterbutler_hmac_secret: 'changeme'
-waterbutler_identity_api_url: 'http://192.168.111.1:5000/api/v1/files/auth/'
-
-
-waterbutler_apps_dir: "/opt/apps/"
-waterbutler_conf_dir: "/etc/waterbutler/"
-
-waterbutler_repo_dir: "{{ waterbutler_apps_dir }}waterbutler/"
-waterbutler_repo_branch: "develop"
-
-waterbutler_venvs_dir: "/opt/envs/"
-waterbutler_venv: "{{ waterbutler_venvs_dir }}waterbutler/"
+waterbutler_env: staging
+waterbutler_branch: develop
+waterbutler_repo: "https://github.com/CenterForOpenScience/waterbutler"
 
 waterbutler_log_dir: "/var/log/waterbutler/"
 
-waterbutler_ssl: no
-waterbutler_ssl_dir: /srv/ssl/
-waterbutler_ssl_cert: "{{ waterbutler_ssl_dir }}waterbutler.crt"
-waterbutler_ssl_key: "{{ waterbutler_ssl_dir }}waterbutler.key"
-
 redis_data: "/opt/redis/"
 rabbitmq_data: "/opt/rabbitmq/"
-waterbutler_config: "/opt/data/waterbutler-prod.json"
+
+waterbutler_config: "/opt/data/waterbutler-{{ waterbutler_env }}.json"
+
 waterbutler_pending: "/opt/data/pending/"
 waterbutler_complete: "/opt/data/complete/"
