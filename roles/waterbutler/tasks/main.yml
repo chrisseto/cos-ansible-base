@@ -91,6 +91,8 @@
     - "redis"
     - "centerforopenscience/rabbitmq"
     - "centerforopenscience/waterbutler"
+  tags:
+    - update
 
 
 - name: Run Redis image
@@ -99,6 +101,8 @@
     image: "redis:latest"
     volumes:
       - "{{ redis_data }}:/data"
+  tags:
+    - update
 
 
 - name: Run RabbitMQ image
@@ -108,6 +112,8 @@
     image: "centerforopenscience/rabbitmq:latest"
     volumes:
       - "{{ rabbitmq_data }}:/var/lib/rabbitmq"
+  tags:
+    - update
 
 
 - name: Run WaterButler Server image
@@ -124,10 +130,13 @@
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
+    restart_policy: always
     volumes:
       - "{{ waterbutler_pending }}:/data/osfstorage/pending"
       - "{{ waterbutler_complete }}:/data/osfstorage/complete"
       - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-prod.json:ro"
+  tags:
+    - update
 
 
 - name: Run WaterButler Celery image
@@ -135,6 +144,7 @@
     name: waterbutler_celery_1
     image: "centerforopenscience/waterbutler:latest"
     command: invoke-celery
+    restart_policy: always
     env:
       ENV: prod
       SOURCE_BRANCH: develop
@@ -145,3 +155,5 @@
       - "{{ waterbutler_pending }}:/data/osfstorage/pending"
       - "{{ waterbutler_complete }}:/data/osfstorage/complete"
       - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-prod.json:ro"
+  tags:
+    - update
