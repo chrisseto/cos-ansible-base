@@ -1,13 +1,36 @@
+- name: Ensure pip dependencies
+  sudo: yes
+  pip:
+    state: present
+    name: "{{ item }}"
+  with_items:
+    - "docker-py"
+    - "python-apt"
+
+
+- name: Ensure apt keys
+  sudo: yes
+  apt_key:
+    id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
+    keyserver: "hkp://keyserver.ubuntu.com:80"
+    state: present
+
+
+- name: Ensure apt repositories
+  sudo: yes
+  apt_repository:
+    repo: "deb https://get.docker.com/ubuntu docker main"
+    state: present
+
+
 - name: Ensure system dependencies
+  sudo: yes
   apt:
     state: present
     pkg: "{{ item }}"
   with_items:
-    - "par2"
+    - "lxc-docker"
     - "logrotate"
-    - "python3-dev"
-    - "redis-server"
-    - "python-redis"
 
 
 - name: Ensure apps directory
@@ -20,14 +43,23 @@
     mode: 0775
 
 
-- name: Ensure settings directory
-  file:
-    path: "{{ waterbutler_conf_dir }}"
-    state: directory
+# - name: Ensure settings directory
+#   file:
+#     path: "{{ waterbutler_conf_dir }}"
+#     state: directory
+#     owner: www-data
+#     group: waterbutler
+#     recurse: yes
+#     mode: 0776
+
+
+- name: Copy settings
+  copy:
+    dest: "{{ waterbutler_config }}"
+    src: "~/.cos/waterbutler-prod.json"
     owner: www-data
     group: waterbutler
-    recurse: yes
-    mode: 0775
+    mode: 0776
 
 
 - name: Ensure log directory
@@ -38,163 +70,6 @@
     group: waterbutler
     recurse: yes
     mode: 0775
-
-
-- name: Ensure SSL directory
-  file:
-    path: "{{ waterbutler_ssl_dir }}"
-    state: directory
-    owner: www-data
-    group: waterbutler
-    mode: 0775
-  when: waterbutler_ssl
-  tags:
-    - update
-
-
-- name: Copy SSL certificate
-  copy:
-    src: "{{ waterbutler_ssl_cert_src }}"
-    dest: "{{ waterbutler_ssl_cert }}"
-  when: waterbutler_ssl
-  tags:
-    - update
-
-
-- name: Copy SSL key
-  copy:
-    src: "{{ waterbutler_ssl_key_src }}"
-    dest: "{{ waterbutler_ssl_key }}"
-  when: waterbutler_ssl
-  tags:
-    - update
-
-
-- name: Ensure venv directory
-  file:
-    path: "{{ waterbutler_venvs_dir }}"
-    state: directory
-    owner: www-data
-    group: waterbutler
-    mode: 0755
-
-
-- name: Create venv
-  command: "virtualenv -p python3 {{ waterbutler_venv }}"
-  args:
-    creates: "{{ waterbutler_venv }}"
-
-
-- name: Allow www-data to bind to low ports
-  capabilities:
-    path: "{{ waterbutler_venv }}bin/python3"
-    capability: cap_net_bind_service+ep
-    state: present
-  sudo: yes
-  tags:
-    - update
-
-
-- name: Ensure file directories
-  file:
-    path: "{{ item }}"
-    state: directory
-    owner: www-data
-    group: waterbutler
-    mode: 0755
-  with_items:
-    - "{{ waterbutler_file_path_pending }}"
-    - "{{ waterbutler_file_path_complete }}"
-  tags:
-    - update
-
-
-- name: Ensure invoke
-  pip:
-    name: invoke
-    virtualenv: "{{ waterbutler_venv }}"
-
-
-- name: Ensure www-data:upload ownership of venv
-  file:
-    path: "{{ waterbutler_venv }}"
-    state: directory
-    recurse: yes
-    mode: 0775
-    group: waterbutler
-    owner: www-data
-
-
-- name: Pull from GitHub
-  git:
-    repo: "https://github.com/CenterForOpenScience/waterbutler"
-    dest: "{{ waterbutler_repo_dir }}"
-    version: "{{ waterbutler_repo_branch }}"
-    update: yes
-  sudo: False
-  tags:
-    - update
-
-
-- name: Install WaterButler
-  command: "{{ waterbutler_venv }}bin/python3 setup.py develop"
-  args:
-    chdir: "{{ waterbutler_repo_dir }}"
-  tags:
-    - update
-
-
-- name: Copy Settings
-  template:
-    src: waterbutler.conf.j2
-    dest: "{{ waterbutler_conf_dir }}server.conf"
-    owner: www-data
-    group: waterbutler
-    mode: 0755
-  tags:
-    - update
-    - settings
-
-
-- name: Ensure www-data:upload ownership of repo
-  file:
-    path: "{{ waterbutler_repo_dir }}"
-    state: directory
-    recurse: yes
-    mode: 0775
-    owner: www-data
-    group: waterbutler
-
-
-- name: Ensure Python requirements
-  pip:
-    requirements: "{{ waterbutler_repo_dir }}dev-requirements.txt"
-    extra_args: "--upgrade"
-    virtualenv: "{{ waterbutler_venv }}"
-  tags:
-    - update
-
-
-- name: Ensure supervisor config for celery
-  template:
-    src: celery.conf.j2
-    dest: /etc/supervisor/conf.d/celery.conf
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - update
-
-
-- name: Ensure supervisor config for tornado
-  template:
-    src: tornado.conf.j2
-    dest: /etc/supervisor/conf.d/tornado.conf
-    owner: root
-    group: root
-    mode: 0644
-  tags:
-    - update
 
 
 - name: Ensure logrotate config
@@ -208,41 +83,65 @@
     - update
 
 
-- name: Ensure Redis is running
-  service:
-    name: redis-server
-    state: started
-    enabled: yes
-  tags:
-    - update
+- name: Clean up old dockers
+  docker:
+    image: "{{ item }}"
+    state: absent
+  with_items:
+    - "redis"
+    - "centerforopenscience/rabbitmq"
+    - "centerforopenscience/waterbutler"
 
 
-- name: Ensure Redis configuration
-  redis:
-    command: config
-    name: maxmemory
-    value: "{{ waterbutler_redis_maxmemory }}"
-  tags:
-    - update
+- name: Run Redis image
+  docker:
+    name: waterbutler_redis_1
+    image: "redis:latest"
+    volumes:
+      - "{{ redis_data }}:/data"
 
 
-- name: Ensure supervisor is running
-  service:
-    name: supervisor
-    state: started
-    enabled: yes
-  tags:
-    - update
+- name: Run RabbitMQ image
+  docker:
+    name: waterbutler_rabbitmq_1
+    hostname: waterbutler_rabbitmq_1
+    image: "centerforopenscience/rabbitmq:latest"
+    volumes:
+      - "{{ rabbitmq_data }}:/var/lib/rabbitmq"
 
 
-# - name: Ensure celery
-#   include: supervisor-restart.yml name=celery
-#   tags:
-#     - update
+- name: Run WaterButler Server image
+  docker:
+    name: waterbutler_server_1
+    image: "centerforopenscience/waterbutler:latest"
+    command: invoke-server
+    env:
+      ENV: prod
+      SOURCE_BRANCH: develop
+      SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
+    ports:
+      - "7777:7777"
+    links:
+      - waterbutler_redis_1:redis
+      - waterbutler_rabbitmq_1:rabbitmq
+    volumes:
+      - "{{ waterbutler_pending }}:/data/osfstorage/pending"
+      - "{{ waterbutler_complete }}:/data/osfstorage/complete"
+      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-prod.json:ro"
 
 
-- name: Ensure tornado
-  include: supervisor-restart.yml name=tornado
-  tags:
-    - update
-    - settings
+- name: Run WaterButler Celery image
+  docker:
+    name: waterbutler_celery_1
+    image: "centerforopenscience/waterbutler:latest"
+    command: invoke-celery
+    env:
+      ENV: prod
+      SOURCE_BRANCH: develop
+      SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
+    links:
+      - waterbutler_rabbitmq_1:rabbitmq
+    volumes:
+      - "{{ waterbutler_pending }}:/data/osfstorage/pending"
+      - "{{ waterbutler_complete }}:/data/osfstorage/complete"
+      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-prod.json:ro"

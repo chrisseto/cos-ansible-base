@@ -19,3 +19,9 @@ waterbutler_ssl: no
 waterbutler_ssl_dir: /srv/ssl/
 waterbutler_ssl_cert: "{{ waterbutler_ssl_dir }}waterbutler.crt"
 waterbutler_ssl_key: "{{ waterbutler_ssl_dir }}waterbutler.key"
+
+redis_data: "/opt/redis/"
+rabbitmq_data: "/opt/rabbitmq/"
+waterbutler_config: "/opt/data/waterbutler-prod.json"
+waterbutler_pending: "/opt/data/pending/"
+waterbutler_complete: "/opt/data/complete/"
