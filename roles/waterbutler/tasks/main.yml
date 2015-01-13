@@ -37,16 +37,16 @@
   sudo: yes
   apt:
     state: present
+    pkg: "lxc-docker"
 
 
- - name: Ensure variable directories exist
+- name: Ensure variable directories exist
   file:
     path: "{{ item }}"
     state: directory
   with_items:
     - "{{ waterbutler_complete }}"
-    - "{{ waterbutler_pending }}"   pkg: "lxc-docker"
-
+    - "{{ waterbutler_pending }}"
 
 - name: Copy settings
   copy:
@@ -61,6 +61,7 @@
     state: absent
   with_items:
     - "redis"
+    - "ctlc/ambassador"
     - "centerforopenscience/rabbitmq"
     - "centerforopenscience/waterbutler"
   tags:
@@ -90,15 +91,13 @@
 
 - name: Run WaterButler Server image
   docker:
-    name: waterbutler_server_1
+    name: "waterbutler_server_{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
     command: invoke-server
     env:
       ENV: "{{ waterbutler_env }}"
       SOURCE_BRANCH: develop
       SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
-    ports:
-      - "7777:7777"
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
@@ -106,9 +105,12 @@
     volumes:
       - "{{ waterbutler_pending }}:/data/osfstorage/pending"
       - "{{ waterbutler_complete }}:/data/osfstorage/complete"
-      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-prod.json:ro"
+      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
   tags:
     - update
+  with_items:
+    - '1'
+    - '2'
 
 
 - name: Run WaterButler Celery image
@@ -127,6 +129,23 @@
     volumes:
       - "{{ waterbutler_pending }}:/data/osfstorage/pending"
       - "{{ waterbutler_complete }}:/data/osfstorage/complete"
-      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-prod.json:ro"
+      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
   tags:
     - update
+
+
+- name: Run WaterButler Ambassadors
+  docker:
+    image: ctlc/ambassador
+    name: 'waterbutler_server_{{ item }}_amb'
+    expose:
+      - 7777
+    ports:
+      - "7777:7777"
+    links:
+      - 'waterbutler_server_{{ item }}'
+    restart_policy: always
+  tags:
+    - update
+  with_items:
+    - '1'
