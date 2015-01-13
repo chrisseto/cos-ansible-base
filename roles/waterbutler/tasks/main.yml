@@ -37,7 +37,15 @@
   sudo: yes
   apt:
     state: present
-    pkg: "lxc-docker"
+
+
+ - name: Ensure variable directories exist
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ waterbutler_complete }}"
+    - "{{ waterbutler_pending }}"   pkg: "lxc-docker"
 
 
 - name: Copy settings
