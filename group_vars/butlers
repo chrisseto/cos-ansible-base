@@ -59,9 +59,15 @@ csf_allowed_ips:
 
 csf_lf_sshd_perm: 30
 
+waterbutler_instances: 2
+waterbutler_start_port: 7770
+waterbutler_addresses:
+  - '192.168.111.111'
+  - '192.168.111.112'
+
 # 22 is required for inbound SSH
-csf_tcp_in: "22, 7777"
-csf_tcp6_in: "22, 7777"
+csf_tcp_in: "22, {{ range(waterbutler_start_port + 1, waterbutler_start_port + waterbutler_instances + 1) | join(', ') }}"
+csf_tcp6_in: "22, {{ range(waterbutler_start_port + 1, waterbutler_start_port + waterbutler_instances + 1) | join(', ') }}"
 
 csf_tcp_out: "22,80,443"
 csf_tcp6_out: "22,80,443"

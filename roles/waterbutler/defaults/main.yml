@@ -11,3 +11,5 @@ waterbutler_config: "/opt/data/waterbutler-{{ waterbutler_env }}.json"
 
 waterbutler_pending: "/opt/data/pending/"
 waterbutler_complete: "/opt/data/complete/"
+waterbutler_instances: 2
+waterbutler_start_port: 7770

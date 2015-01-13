@@ -49,6 +49,8 @@
     mode: 0776
     src: "haproxy.conf"
     dest: "{{ haproxy_config_dir }}/haproxy.cfg"
+  tags:
+    - update
 
 
 - name: Clean up old dockers
@@ -56,26 +58,26 @@
     image: "{{ item }}"
     state: absent
   with_items:
-    - "ctlc/ambassador"
+    # - "ctlc/ambassador"
     - "centerforopenscience/haproxy:latest"
   tags:
     - update
 
 
-- name: Run WaterButler Ambassadors
-  docker:
-    image: ctlc/ambassador
-    name: 'waterbutler_server_{{ item }}_amb'
-    expose:
-      - 7777
-    env:
-      "REMOTE_PORT_7777_TCP": "tcp://192.168.111.11{{ item }}:7777"
-    restart_policy: always
-  tags:
-    - update
-  with_items:
-    - '1'
-    - '2'
+# - name: Run WaterButler Ambassadors
+#   docker:
+#     image: ctlc/ambassador
+#     name: 'waterbutler_server_{{ item }}_amb'
+#     expose:
+#       - 7777
+#     env:
+#       "REMOTE_PORT_7777_TCP": "tcp://192.168.111.11{{ item }}:7777"
+#     restart_policy: always
+#   tags:
+#     - update
+#   with_items:
+#     - '1'
+#     - '2'
 
 - name: Run HAProxy
   docker:
@@ -87,11 +89,11 @@
     ports:
       - '80:80'
       - '443:443'
-    links:
-      - 'waterbutler_server_1_amb:waterbutler1'
-      - 'waterbutler_server_2_amb:waterbutler2'
+    # links:
+    #   - 'waterbutler_server_1_amb:waterbutler1'
+    #   - 'waterbutler_server_2_amb:waterbutler2'
     volumes:
-    - '{{ haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
+      - '{{ haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
     restart_policy: always
   tags:
     - update
