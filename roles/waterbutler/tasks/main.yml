@@ -96,10 +96,10 @@
     name: "waterbutler_server_{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
     command: invoke-server
-    expose:
-      - "{{ (waterbutler_start_port | int) + (item | int) }}"
+    # expose:
+    #   - "{{ (waterbutler_start_port | int) + (item | int) }}"
     ports:
-      - "{{ (waterbutler_start_port | int) + (item | int) }}:7777"
+      - "{{ (waterbutler_start_port | int) + (item | int) - 1 }}:7777"
     env:
       ENV: "{{ waterbutler_env }}"
       SOURCE_BRANCH: develop

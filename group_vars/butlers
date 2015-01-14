@@ -37,37 +37,24 @@ genericusers_users:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCr6BXe1LEo4+Gc0rNg0w5IABZTmCGanN25ElvRTOnmRYYQWac2v5dl59RI3uRLBBzo/KYXCGSb2lXNbka8S9C+KCSBA9V5U4Wlau7DuArL0fwl6xMFkKZor+fC2NGLFIpXX39xe2deMrUkIYnO14DJpHdcopCn2yFodOilpsUqqHFuelryYMIXP66uRd6Mquj4ILiBvRWSgmX2HNiS7nrBXgfomlQq5RLQnoOkB6EgG8A1g1/sSg7prwZKQpoJfo/eyXeMbG7trefGDz0vLEuUwXfgByYxkmgOYA6ttyC+GIymXaPV05uRd1HQ6A/5U7M+HikFSnKmfCwINUt1q9h5 michael@Citidel.local
 
 
-# # --- network_interfaces
-
-# network_interfaces:
-#   - name: eth0
-#     address: 23.92.21.223
-#     netmask: 255.255.255.0
-#     gateway: 23.92.21.1
-#   - name: eth0:0
-#     address: 192.168.162.236
-#     netmask: 255.255.128.0
-
-# # --- csf
-
-csf_allowed_ips:
-#   - 66.228.46.171
-#   - 23.92.16.194
-#   - 69.164.210.152
-# csf_lf_alert_to: ""
-# csf_lf_alert_from: ""
-
-csf_lf_sshd_perm: 30
+# --- waterbutler
 
 waterbutler_instances: 2
 waterbutler_start_port: 7770
-waterbutler_addresses:
-  - '192.168.111.111'
-  - '192.168.111.112'
+waterbutler_subnet: '192.168.111.0/24'
+
+# --- csf
+
+csf_allowed_ips: 
+  - "'tcp|in|s={{ waterbutler_start_port }}_{{ waterbutler_start_port + waterbutler_instances - 1 }}|s={{ waterbutler_subnet }}"
+csf_lf_alert_to: ""
+csf_lf_alert_from: ""
+
+csf_lf_sshd_perm: 30
 
 # 22 is required for inbound SSH
-csf_tcp_in: "22, {{ range(waterbutler_start_port + 1, waterbutler_start_port + waterbutler_instances + 1) | join(', ') }}"
-csf_tcp6_in: "22, {{ range(waterbutler_start_port + 1, waterbutler_start_port + waterbutler_instances + 1) | join(', ') }}"
+csf_tcp_in: "22"
+csf_tcp6_in: "22"
 
 csf_tcp_out: "22,80,443"
 csf_tcp6_out: "22,80,443"
