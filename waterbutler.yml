@@ -1,24 +1,18 @@
+- name: Make csf and docker work nicely
+  hosts:
+    - butlers
+    - waterbalancer
+  roles:
+    - role: dockercsf
+
+
 - name: Set up waterbutler workers
   hosts: butlers
   roles:
     - role: waterbutler
 
+
 - name: Set up HAProxy
   hosts: waterbalancer
   roles:
     - role: waterbalancer
-    # - role: info.haproxy
-    #   haproxy_frontends:
-    #   - name: 'WaterBalancer'
-    #     port: '80'
-    #     maxconn: '1000'
-    #     default_backend: 'TheButlers'
-    #   haproxy_backends:
-    #   - name: 'TheButlers'
-    #     description: 'The collection of waterbutler workers'
-    #     servers:
-    #       - name: 'butler-01'
-    #         ip: '192.168.111.111'
-    #       - name: 'butler-02'
-    #         ip: '192.168.111.112'
-
