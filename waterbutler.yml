@@ -1,11 +1,3 @@
-- name: Make csf and docker work nicely
-  hosts:
-    - butlers
-    - waterbalancer
-  roles:
-    - role: dockercsf
-
-
 - name: Set up waterbutler workers
   hosts: butlers
   roles:
@@ -16,3 +8,11 @@
   hosts: waterbalancer
   roles:
     - role: waterbalancer
+
+
+- name: Make csf and docker work nicely
+  hosts:
+    - butlers
+    - waterbalancer
+  roles:
+    - role: dockercsf
