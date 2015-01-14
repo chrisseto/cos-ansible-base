@@ -1,0 +1,32 @@
+- name: Install csf upstart
+  sudo: yes
+  copy:
+    src: csf-started
+    dest: /etc/init/csf-started
+    mode: 0644
+
+
+- name: Update csf system V
+  sudo: yes
+  copy:
+    src: csf-started.d
+    dest: /etc/init.d/csf-started
+    mode: 0755
+
+
+- name: Update upstart
+  sudo: yes
+  command: update-rc.d csf-started defaults
+
+
+- name: Restart csf-started
+  sudo: yes
+  service:
+    name: csf-started
+    state: restarted
+
+- name: Restart Docker
+  sudo: yes
+  service:
+    name: docker
+    state: restarted
