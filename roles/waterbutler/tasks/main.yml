@@ -48,24 +48,31 @@
     - "{{ waterbutler_complete }}"
     - "{{ waterbutler_pending }}"
 
+
 - name: Copy settings
   copy:
     dest: "{{ waterbutler_config }}"
     src: "~/.cos/waterbutler-{{ waterbutler_env }}.json"
     mode: 0776
-
-
-- name: Clean up old dockers
-  docker:
-    image: "{{ item }}"
-    state: absent
-  with_items:
-    - "redis"
-    # - "ctlc/ambassador"
-    - "centerforopenscience/rabbitmq"
-    - "centerforopenscience/waterbutler"
   tags:
     - update
+    - settings
+
+
+- name: Delete docker containers
+  sudo: yes
+  shell: "docker rm -f $(docker ps -aq)"
+  ignore_errors: yes
+  tags:
+    - clean
+
+
+- name: Delete docker images
+  sudo: yes
+  shell: "docker rmi -f $(docker images -q)"
+  ignore_errors: yes
+  tags:
+    - clean
 
 
 - name: Run Redis image
@@ -102,8 +109,6 @@
       - "{{ (waterbutler_start_port | int) + (item | int) - 1 }}:7777"
     env:
       ENV: "{{ waterbutler_env }}"
-      SOURCE_BRANCH: develop
-      SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
@@ -125,8 +130,6 @@
     restart_policy: always
     env:
       ENV: "{{ waterbutler_env }}"
-      SOURCE_BRANCH: develop
-      SOURCE_REPO: https://github.com/CenterForOpenScience/waterbutler
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
