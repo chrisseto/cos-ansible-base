@@ -40,18 +40,35 @@
     pkg: "lxc-docker"
 
 
-- name: Ensure variable directories exist
+- name: Ensure waterbutler directories exist
+  sudo: yes
   file:
-    path: "{{ item }}"
     state: directory
+    path: "{{ item }}"
   with_items:
-    - "{{ waterbutler_complete }}"
-    - "{{ waterbutler_pending }}"
+    - "{{ waterbutler_config_dir }}"
+    - "{{ waterbutler_redis_dir }}"
+    - "{{ waterbutler_rabbitmq_dir }}"
+    - "{{ waterbutler_osfstorage_pending_dir }}"
+    - "{{ waterbutler_osfstorage_complete_dir }}"
+  tags:
+    - update
+    - settings
 
 
-- name: Copy settings
+- name: Copy newrelic settings
+  template:
+    mode: 0776
+    src: newrelic.ini.j2
+    dest: "{{ waterbutler_config_dir }}/newrelic.ini"
+  tags:
+    - update
+    - settings
+
+
+- name: Copy waterbutler settings
   copy:
-    dest: "{{ waterbutler_config }}"
+    dest: "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json"
     src: "~/.cos/waterbutler-{{ waterbutler_env }}.json"
     mode: 0776
   tags:
@@ -81,7 +98,7 @@
     restart_policy: always
     name: waterbutler_redis_1
     volumes:
-      - "{{ waterbutler_redis_data }}:/data"
+      - "{{ waterbutler_redis_dir }}:/data"
   tags:
     - update
 
@@ -93,7 +110,7 @@
     hostname: waterbutler_rabbitmq_1
     image: "centerforopenscience/rabbitmq:latest"
     volumes:
-      - "{{ waterbutler_rabbitmq_data }}:/var/lib/rabbitmq"
+      - "{{ waterbutler_rabbitmq_dir }}:/var/lib/rabbitmq"
   tags:
     - update
 
@@ -102,21 +119,23 @@
   docker:
     name: "waterbutler_server_{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
-    command: invoke-server
+    command: newrelic-admin run-program invoke server
     # expose:
     #   - "{{ (waterbutler_start_port | int) + (item | int) }}"
     ports:
       - "{{ (waterbutler_start_port | int) + (item | int) - 1 }}:7777"
     env:
       ENV: "{{ waterbutler_env }}"
+      NEW_RELIC_CONFIG_FILE: /newrelic.ini
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
     restart_policy: always
     volumes:
-      - "{{ waterbutler_pending }}:/data/osfstorage/pending"
-      - "{{ waterbutler_complete }}:/data/osfstorage/complete"
-      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
+      - "{{ waterbutler_osfstorage_pending_dir }}:/data/osfstorage/pending"
+      - "{{ waterbutler_osfstorage_complete_dir }}:/data/osfstorage/complete"
+      - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
+      - "{{ waterbutler_config_dir }}/newrelic.ini:/newrelic.ini:ro"
   tags:
     - update
   with_sequence: "{{ waterbutler_instances }}"
@@ -126,17 +145,19 @@
   docker:
     name: waterbutler_celery_1
     image: "centerforopenscience/waterbutler:latest"
-    command: invoke-celery
+    command: newrelic-admin run-program invoke celery
     restart_policy: always
     env:
       ENV: "{{ waterbutler_env }}"
+      NEW_RELIC_CONFIG_FILE: /newrelic.ini
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
     volumes:
-      - "{{ waterbutler_pending }}:/data/osfstorage/pending"
-      - "{{ waterbutler_complete }}:/data/osfstorage/complete"
-      - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
+      - "{{ waterbutler_osfstorage_pending_dir }}:/data/osfstorage/pending"
+      - "{{ waterbutler_osfstorage_complete_dir }}:/data/osfstorage/complete"
+      - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
+      - "{{ waterbutler_config_dir }}/newrelic.ini:/newrelic.ini:ro"
   tags:
     - update
 

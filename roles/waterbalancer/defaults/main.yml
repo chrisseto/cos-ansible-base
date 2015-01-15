@@ -1,6 +1,4 @@
-newrelic_license_key: '...'
-
-haproxy_config_dir: /opt/haproxy
+waterbalancer_haproxy_config_dir: /opt/haproxy
 
 waterbutler_instances: 2
 waterbutler_start_port: 7770

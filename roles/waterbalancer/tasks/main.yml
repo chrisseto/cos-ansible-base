@@ -40,17 +40,19 @@
     pkg: "lxc-docker"
 
 
-- name: Make settings directory
+- name: Ensure variable directories exist
   file:
     state: directory
-    path: "{{ haproxy_config_dir }}"
+    path: "{{ item }}"
+  with_items:
+    - "{{ waterbalancer_haproxy_config_dir }}"
 
 
 - name: Copy settings
   template:
     mode: 0776
-    src: "haproxy.conf.j2"
-    dest: "{{ haproxy_config_dir }}/haproxy.cfg"
+    src: haproxy.conf.j2
+    dest: "{{ waterbalancer_haproxy_config_dir }}/haproxy.cfg"
   tags:
     - update
 
@@ -96,7 +98,7 @@
     #   - 'waterbutler_server_1_amb:waterbutler1'
     #   - 'waterbutler_server_2_amb:waterbutler2'
     volumes:
-      - '{{ haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
+      - '{{ waterbalancer_haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
     restart_policy: always
   tags:
     - update
