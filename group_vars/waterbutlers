@@ -36,7 +36,7 @@ genericusers_users:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCr6BXe1LEo4+Gc0rNg0w5IABZTmCGanN25ElvRTOnmRYYQWac2v5dl59RI3uRLBBzo/KYXCGSb2lXNbka8S9C+KCSBA9V5U4Wlau7DuArL0fwl6xMFkKZor+fC2NGLFIpXX39xe2deMrUkIYnO14DJpHdcopCn2yFodOilpsUqqHFuelryYMIXP66uRd6Mquj4ILiBvRWSgmX2HNiS7nrBXgfomlQq5RLQnoOkB6EgG8A1g1/sSg7prwZKQpoJfo/eyXeMbG7trefGDz0vLEuUwXfgByYxkmgOYA6ttyC+GIymXaPV05uRd1HQ6A/5U7M+HikFSnKmfCwINUt1q9h5 michael@Citidel.local
 
 
-# --- waterbutler
+# --- water butler
 
 waterbutler_instances: 2
 waterbutler_start_port: 7770
