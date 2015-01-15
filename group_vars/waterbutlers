@@ -66,6 +66,5 @@ csf_tcp6_in: "22"
 csf_tcp_out: "22,80,443"
 csf_tcp6_out: "22,80,443"
 
-# 123 ntp
-csf_udp_out: "123"
-csf_udp6_out: "123"
+csf_udp_out: ""
+csf_udp6_out: ""
