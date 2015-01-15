@@ -2,42 +2,7 @@
   sudo: yes
   apt:
     state: present
-    pkg: "{{ item }}"
-  with_items:
-    - "ntp"
-    - "python-pip"
-
-
-- name: Ensure pip dependencies
-  sudo: yes
-  pip:
-    state: present
-    name: "{{ item }}"
-  with_items:
-    - "docker-py"
-    - "python-apt"
-
-
-- name: Ensure docker apt keys
-  sudo: yes
-  apt_key:
-    id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
-    keyserver: "hkp://keyserver.ubuntu.com:80"
-    state: present
-
-
-- name: Ensure docker apt repositories
-  sudo: yes
-  apt_repository:
-    repo: "deb https://get.docker.com/ubuntu docker main"
-    state: present
-
-
-- name: Ensure docker
-  sudo: yes
-  apt:
-    state: present
-    pkg: "lxc-docker"
+    pkg: ntp
 
 
 - name: Ensure variable directories exist
@@ -139,20 +104,3 @@
       - "{{ waterbutler_config }}:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
   tags:
     - update
-
-
-# - name: Run WaterButler Ambassadors
-#   docker:
-#     image: ctlc/ambassador
-#     name: 'waterbutler_server_{{ item }}_amb'
-#     expose:
-#       - 7777
-#     ports:
-#       - "7777:7777"
-#     links:
-#       - 'waterbutler_server_{{ item }}'
-#     restart_policy: always
-#   tags:
-#     - update
-#   with_items:
-#     - '1'
