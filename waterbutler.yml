@@ -1,5 +1,5 @@
 - name: Set up waterbutler workers
-  hosts: butlers
+  hosts: waterbutlers
   roles:
     - role: waterbutler
 
@@ -12,7 +12,7 @@
 
 - name: Make csf and docker work nicely
   hosts:
-    - butlers
+    - waterbutlers
     - waterbalancer
   roles:
     - role: dockercsf

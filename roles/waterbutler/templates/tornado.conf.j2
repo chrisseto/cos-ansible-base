@@ -1,9 +1,0 @@
-[program:tornado]
-command={{ waterbutler_venv }}bin/python {{ waterbutler_repo_dir }}server --config={{waterbutler_conf_dir}}/server.conf
-directory={{ waterbutler_repo_dir }}
-user=www-data
-autostart=true
-autorestart=true
-stopasgroup=true
-stdout_logfile={{ waterbutler_log_dir }}tornado-stdout.log
-stderr_logfile={{ waterbutler_log_dir }}tornado-stderr.log

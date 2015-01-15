@@ -18,7 +18,7 @@
     - "python-apt"
 
 
-- name: Ensure apt keys
+- name: Ensure docker apt keys
   sudo: yes
   apt_key:
     id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
@@ -26,23 +26,25 @@
     state: present
 
 
-- name: Ensure apt repositories
+- name: Ensure docker apt repository
   sudo: yes
   apt_repository:
     repo: "deb https://get.docker.com/ubuntu docker main"
     state: present
 
 
-- name: Ensure Docker
+- name: Ensure docker
   sudo: yes
   apt:
     state: present
     pkg: "lxc-docker"
 
+
 - name: Make settings directory
   file:
     state: directory
     path: "{{ haproxy_config_dir }}"
+
 
 - name: Copy settings
   template:
@@ -78,6 +80,7 @@
 #   with_items:
 #     - '1'
 #     - '2'
+
 
 - name: Run HAProxy
   docker:

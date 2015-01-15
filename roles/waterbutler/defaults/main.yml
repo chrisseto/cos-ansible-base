@@ -1,8 +1,4 @@
 waterbutler_env: staging
-waterbutler_branch: develop
-waterbutler_repo: "https://github.com/CenterForOpenScience/waterbutler"
-
-waterbutler_log_dir: "/var/log/waterbutler/"
 
 redis_data: "/opt/redis/"
 rabbitmq_data: "/opt/rabbitmq/"
