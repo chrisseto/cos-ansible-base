@@ -4,8 +4,9 @@
     state: present
     pkg: "{{ item }}"
   with_items:
-    - "python-pip"
+    - "ntp"
     - "logrotate"
+    - "python-pip"
 
 
 - name: Ensure pip dependencies
