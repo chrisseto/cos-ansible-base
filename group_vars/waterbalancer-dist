@@ -36,6 +36,9 @@ genericusers_users:
 
 # --- water butler
 
+haproxy_stats_user: User1
+haproxy_stats_password: password
+
 waterbutler_instances: 2
 waterbutler_start_port: 7770
 waterbutler_subnet: "192.168.111.0/24"
@@ -46,8 +49,8 @@ waterbutler_addresses:
 
 # --- new relic
 
-newrelic_app_name: 'WaterButler Proxy'
-newrelic_license_key: '...'
+newrelic_app_name: "WaterButler Proxy"
+newrelic_license_key: "..."
 
 
 # --- csf

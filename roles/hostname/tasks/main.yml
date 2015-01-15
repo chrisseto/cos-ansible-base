@@ -1,3 +1,11 @@
+- debug:
+    msg: "{{ ansible_hostname }}"
+
+
+- debug:
+    msg: "{{ hostname_name }}"
+
+
 - name: Update the hostname
   copy:
     content: "{{ hostname_name }}"
@@ -7,16 +15,15 @@
     mode: 0644
   when: hostname_name != ""
 
+
 - name: Update /etc/hosts
-  lineinfile:
+  replace:
     dest: /etc/hosts
-    regexp: "^127.0.0.1"
-    line: "127.0.0.1 localhost {{ hostname_name }}"
-    state: present
+    regexp: '{{ ansible_hostname }}'
+    replace: '{{ hostname_name }}'
+    backup: yes
   when: hostname_name != ""
 
-- debug:
-    msg: "{{ hostname_name }}"
 
 - name: Run hostname cmd
   hostname:
