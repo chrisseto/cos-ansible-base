@@ -102,7 +102,6 @@
     restart_policy: always
     volumes:
       - "{{ waterbutler_osfstorage_pending_dir }}:/data/osfstorage/pending"
-      - "{{ waterbutler_osfstorage_complete_dir }}:/data/osfstorage/complete"
       - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
       - "{{ waterbutler_config_dir }}/newrelic.ini:/newrelic.ini:ro"
   tags:
