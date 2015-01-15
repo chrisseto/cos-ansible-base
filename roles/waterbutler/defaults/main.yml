@@ -1,11 +1,13 @@
+newrelic_license_key: '...'
+
 waterbutler_env: staging
-
-redis_data: "/opt/redis/"
-rabbitmq_data: "/opt/rabbitmq/"
-
 waterbutler_config: "/opt/data/waterbutler-{{ waterbutler_env }}.json"
 
-waterbutler_pending: "/opt/data/pending/"
-waterbutler_complete: "/opt/data/complete/"
+waterbutler_redis_data: "/opt/redis/"
+waterbutler_rabbitmq_data: "/opt/rabbitmq/"
+
+waterbutler_pending: "/opt/data/osfstorage/pending/"
+waterbutler_complete: "/opt/data/osfstorage/complete/"
+
 waterbutler_instances: 2
 waterbutler_start_port: 7770

@@ -1,9 +1,6 @@
 # --- server
 
-hostname_name: waterbutler-proxy-env-idx
-
-genericusers_groups:
-  - name: waterbutler
+hostname_name: waterbutler-env-idx
 
 genericusers_users:
   - name: cseto
@@ -12,7 +9,6 @@ genericusers_users:
     uid: 3000
     shell: /bin/bash
     groups:
-      - waterbutler
       - sudo
     append: yes
     ssh_keys:
@@ -23,7 +19,6 @@ genericusers_users:
     uid: 3001
     shell: /bin/bash
     groups:
-      - waterbutler
       - sudo
     append: yes
     ssh_keys:
@@ -35,7 +30,6 @@ genericusers_users:
     uid: 3001
     shell: /bin/bash
     groups:
-      - waterbutler
       - sudo
     append: yes
     ssh_keys:
@@ -47,29 +41,26 @@ genericusers_users:
 waterbutler_instances: 2
 waterbutler_start_port: 7770
 waterbutler_subnet: '192.168.111.0/24'
-waterbutler_addresses:
-  - '192.168.111.111'
-  - '192.168.111.112'
 
 
 # --- new relic
 
 newrelic_license_key: '...'
-newrelic_app_name = 'WaterButler Proxy'
+newrelic_app_name = 'WaterButler'
 
 
 # --- csf
 
-csf_allowed_ips:
-  - "'tcp|out|d={{ waterbutler_start_port }}_{{ waterbutler_start_port + waterbutler_instances - 1 }}|d={{ waterbutler_subnet }}"
+csf_allowed_ips: 
+  - "'tcp|in|s={{ waterbutler_start_port }}_{{ waterbutler_start_port + waterbutler_instances - 1 }}|s={{ waterbutler_subnet }}"
 csf_lf_alert_to: ""
 csf_lf_alert_from: ""
 
 csf_lf_sshd_perm: 30
 
-# 22 ssh, 80/443 haproxy
-csf_tcp_in: "22,80,443"
-csf_tcp6_in: "22,80,443"
+# 22 ssh
+csf_tcp_in: "22"
+csf_tcp6_in: "22"
 
 # 22 ssh, 80/443 web
 csf_tcp_out: "22,80,443"

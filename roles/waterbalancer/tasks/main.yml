@@ -49,7 +49,7 @@
 - name: Copy settings
   template:
     mode: 0776
-    src: "haproxy.conf"
+    src: "haproxy.conf.j2"
     dest: "{{ haproxy_config_dir }}/haproxy.cfg"
   tags:
     - update

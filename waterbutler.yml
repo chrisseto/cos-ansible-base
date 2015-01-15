@@ -15,4 +15,4 @@
     - waterbutlers
     - waterbalancer
   roles:
-    - role: dockercsf
+    - role: docker-csf

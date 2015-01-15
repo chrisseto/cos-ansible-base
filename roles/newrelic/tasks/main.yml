@@ -1,0 +1,39 @@
+# Source: https://docs.newrelic.com/docs/servers/new-relic-servers-linux/installation-configuration/servers-installation-ubuntu-debian
+
+##### Install #####
+
+- name: Ensure newrelic apt repository
+  sudo: yes
+  apt_repository:
+    repo: 'deb http://apt.newrelic.com/debian/ newrelic non-free'
+    state: present
+
+
+- name: Ensure newrelic apt key
+  sudo: yes
+  apt_key:
+    url: https://download.newrelic.com/548C16BF.gpg
+    state: present
+
+
+- name: Ensure docker
+  sudo: yes
+  apt:
+    state: present
+    pkg: "newrelic-sysmond"
+
+
+- name: Copy the newrelic license key file
+  sudo: yes
+  template:
+    group: newrelic
+    mode: 0640
+    src: "nrsysmond.cfg.j2"
+    dest: "{{ newrelic_config_dir }}/nrsysmond.cfg"
+
+
+- name: Start service newrelic system monitoring daemon
+  sudo: yes
+  service:
+    name: newrelic-sysmond
+    prsent: started

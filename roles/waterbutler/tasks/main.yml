@@ -81,7 +81,7 @@
     restart_policy: always
     name: waterbutler_redis_1
     volumes:
-      - "{{ redis_data }}:/data"
+      - "{{ waterbutler_redis_data }}:/data"
   tags:
     - update
 
@@ -93,7 +93,7 @@
     hostname: waterbutler_rabbitmq_1
     image: "centerforopenscience/rabbitmq:latest"
     volumes:
-      - "{{ rabbitmq_data }}:/var/lib/rabbitmq"
+      - "{{ waterbutler_rabbitmq_data }}:/var/lib/rabbitmq"
   tags:
     - update
 
