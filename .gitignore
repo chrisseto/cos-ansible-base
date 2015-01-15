@@ -44,6 +44,8 @@ hosts
 .vagrant
 
 group_vars/upload-workers
+group_vars/waterbalancer
+group_vars/waterbutlers
 
 !.gitkeep
 
