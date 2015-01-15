@@ -1,6 +1,6 @@
 - name: Update the hostname
   copy:
-    content: "{{hostname_name}}"
+    content: "{{ hostname_name }}"
     dest: /etc/hostname
     owner: root
     group: root
@@ -11,16 +11,14 @@
   lineinfile:
     dest: /etc/hosts
     regexp: "^127.0.0.1"
-    line: "127.0.0.1{{'\t'}}{{hostname_name}}"
+    line: "127.0.0.1 localhost {{ hostname_name }}"
     state: present
   when: hostname_name != ""
 
 - debug:
-    msg: "{{hostname_name}}"
+    msg: "{{ hostname_name }}"
 
 - name: Run hostname cmd
   hostname:
-    name: "{{hostname_name}}"
+    name: "{{ hostname_name }}"
   when: hostname_name != ""
-
-
