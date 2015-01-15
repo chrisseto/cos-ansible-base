@@ -46,7 +46,7 @@ waterbutler_subnet: "192.168.111.0/24"
 # --- new relic
 
 newrelic_app_name: "WaterButler"
-newrelic_license_key: '...'
+newrelic_license_key: "..."
 
 
 # --- csf

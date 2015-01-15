@@ -64,7 +64,7 @@
     image: "redis:latest"
     restart_policy: always
     name: waterbutler_redis_1
-    hostname: "{{ ansible_hostname }}-redis1"
+    hostname: "{{ hostname_name }}-redis1"
     volumes:
       - "{{ waterbutler_redis_dir }}:/data"
   tags:
@@ -75,7 +75,7 @@
   docker:
     restart_policy: always
     name: waterbutler_rabbitmq_1
-    hostname: "{{ ansible_hostname }}-rabbit1"
+    hostname: "{{ hostname_name }}-rabbit1"
     image: "centerforopenscience/rabbitmq:latest"
     volumes:
       - "{{ waterbutler_rabbitmq_dir }}:/var/lib/rabbitmq"
@@ -86,7 +86,7 @@
 - name: Run WaterButler Server image
   docker:
     name: "waterbutler_server_{{ item }}"
-    hostname: "{{ ansible_hostname }}-server{{ item }}"
+    hostname: "{{ hostname_name }}-server{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
     command: "newrelic-admin run-program invoke server"
     # expose:
@@ -113,7 +113,7 @@
 - name: Run WaterButler Celery image
   docker:
     name: waterbutler_celery_1
-    hostname: "{{ ansible_hostname }}-celery{{ item }}"
+    hostname: "{{ hostname_name }}-celery{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
     command: "newrelic-admin run-program invoke celery"
     restart_policy: always
