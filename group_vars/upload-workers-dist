@@ -3,7 +3,7 @@
 hostname_name: slightlymad
 
 genericusers_groups:
-  - name: waterbutler
+  - name: upload-worker
 
 genericusers_users:
   - name: sloria

@@ -1,7 +1,5 @@
 # --- server
 
-hostname_name: waterbutler-env-idx
-
 genericusers_users:
   - name: cseto
     pass: $5$rounds=110000$hWWtLDopIrnYFEAw$AuvMG7f4fEwNQkOY772LLBeC3yeHJ69nK0FqQGW2Aj/
