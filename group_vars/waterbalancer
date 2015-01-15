@@ -54,8 +54,8 @@ waterbutler_addresses:
 
 # --- new relic
 
-newrelic_license_key: "..."
-newrelic_app_name: "WaterButler Proxy"
+newrelic_app_name: 'WaterButler Proxy'
+newrelic_license_key: '...'
 
 
 # --- csf
