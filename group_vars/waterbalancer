@@ -61,10 +61,14 @@ csf_lf_alert_from: ""
 
 csf_lf_sshd_perm: 30
 
-# 22 is required for inbound SSH
+# 22 ssh, 80/443 haproxy
 csf_tcp_in: "22,80,443"
 csf_tcp6_in: "22,80,443"
 
-# 21 needed for ftp
+# 22 ssh, 80/443 web
 csf_tcp_out: "22,80,443"
 csf_tcp6_out: "22,80,443"
+
+# 123 ntp
+csf_udp_out: "123"
+csf_udp6_out: "123"
