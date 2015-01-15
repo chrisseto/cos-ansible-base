@@ -47,6 +47,7 @@
   ignore_errors: yes
   tags:
     - clean
+    - clean_containers
 
 
 - name: Delete docker images
@@ -55,6 +56,7 @@
   ignore_errors: yes
   tags:
     - clean
+    - clean_images
 
 
 - name: Run Redis image
@@ -86,7 +88,7 @@
     name: "waterbutler_server_{{ item }}"
     hostname: "{{ ansible_hostname }}-server{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
-    command: newrelic-admin run-program invoke server
+    command: "newrelic-admin run-program invoke server"
     # expose:
     #   - "{{ (waterbutler_start_port | int) + (item | int) }}"
     ports:
@@ -113,7 +115,7 @@
     name: waterbutler_celery_1
     hostname: "{{ ansible_hostname }}-celery{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
-    command: newrelic-admin run-program invoke celery
+    command: "newrelic-admin run-program invoke celery"
     restart_policy: always
     env:
       ENV: "{{ waterbutler_env }}"
