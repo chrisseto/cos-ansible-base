@@ -1,7 +1,7 @@
 - name: Make settings directory
   file:
     state: directory
-    path: "{{ haproxy_config_dir }}"
+    path: "{{ haproxy_config_dir}}"
 
 
 - name: Copy settings
