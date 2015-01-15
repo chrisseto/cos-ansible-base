@@ -113,7 +113,7 @@
 - name: Run WaterButler Celery image
   docker:
     name: waterbutler_celery_1
-    hostname: "{{ hostname_name }}-celery{{ item }}"
+    hostname: "{{ hostname_name }}-celery1"
     image: "centerforopenscience/waterbutler:latest"
     command: "newrelic-admin run-program invoke celery"
     restart_policy: always
