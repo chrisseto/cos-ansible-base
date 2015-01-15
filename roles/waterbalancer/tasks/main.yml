@@ -1,45 +1,3 @@
-- name: Ensure system dependencies
-  sudo: yes
-  apt:
-    state: present
-    pkg: "{{ item }}"
-  with_items:
-    - "python-pip"
-    - "logrotate"
-
-
-- name: Ensure pip dependencies
-  sudo: yes
-  pip:
-    state: present
-    name: "{{ item }}"
-  with_items:
-    - "docker-py"
-    - "python-apt"
-
-
-- name: Ensure docker apt keys
-  sudo: yes
-  apt_key:
-    id: 36A1D7869245C8950F966E92D8576A8BA88D21E9
-    keyserver: "hkp://keyserver.ubuntu.com:80"
-    state: present
-
-
-- name: Ensure docker apt repository
-  sudo: yes
-  apt_repository:
-    repo: "deb https://get.docker.com/ubuntu docker main"
-    state: present
-
-
-- name: Ensure docker
-  sudo: yes
-  apt:
-    state: present
-    pkg: "lxc-docker"
-
-
 - name: Make settings directory
   file:
     state: directory
@@ -48,11 +6,20 @@
 
 - name: Copy settings
   template:
-    mode: 0776
+    mode: 0755
     src: "haproxy.conf.j2"
     dest: "{{ haproxy_config_dir }}/haproxy.cfg"
   tags:
     - update
+
+- name: Copy SSL cert
+  copy:
+    mode: 0755
+    src: waterbutler.pem
+    dest: "{{ haproxy_config_dir }}/waterbutler.pem"
+  tags:
+    - update
+  when: haproxy_enable_https
 
 
 - name: Clean up old dockers
@@ -66,22 +33,6 @@
     - update
 
 
-# - name: Run WaterButler Ambassadors
-#   docker:
-#     image: ctlc/ambassador
-#     name: 'waterbutler_server_{{ item }}_amb'
-#     expose:
-#       - 7777
-#     env:
-#       "REMOTE_PORT_7777_TCP": "tcp://192.168.111.11{{ item }}:7777"
-#     restart_policy: always
-#   tags:
-#     - update
-#   with_items:
-#     - '1'
-#     - '2'
-
-
 - name: Run HAProxy
   docker:
     name: 'haproxy_1'
@@ -92,11 +43,9 @@
     ports:
       - '80:80'
       - '443:443'
-    # links:
-    #   - 'waterbutler_server_1_amb:waterbutler1'
-    #   - 'waterbutler_server_2_amb:waterbutler2'
     volumes:
       - '{{ haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
+      - '{{ haproxy_config_dir }}/waterbutler.pem:/etc/ssl/private/waterbutler.pem:ro'
     restart_policy: always
   tags:
     - update

@@ -3,27 +3,53 @@ global
   log 127.0.0.1 local1 notice
   user haproxy
   group haproxy
-  # daemon
 
 defaults
-  log global
-  mode http
-  option httplog
-  option dontlognull
-  timeout connect 5000ms
-  timeout client 50000ms
-  timeout server 50000ms
-
-listen waterbutler 0.0.0.0:80
     mode http
-    stats enable
-    stats uri /haproxy?stats
-    stats realm Strictly\ Private
-    stats auth A_Username:YourPassword
-    stats auth Another_User:passwd
-    balance roundrobin
+    log global
+
+    option httplog
     option httpclose
     option forwardfor
+    option dontlognull
+    option http-server-close
+
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+    balance roundrobin
+
+    # Do not enforce session affinity (i.e., an HTTP session can be served by
+    # any Mongrel, not just the one that started the session
+    option redispatch
+
+    stats enable
+    stats refresh 5s
+    stats uri /haproxy?stats
+    stats realm Haproxy\ Statistics
+    stats auth {{ haproxy_stats_user }}:{{ haproxy_stats_password }}
+
+
+frontend waterbalancer-http
+   bind 0.0.0.0:80
+   reqadd X-Forwarded-Proto:\ http
+   default_backend waterbutler-servers
+
+
+{% if haproxy_enable_https %}
+frontend waterbalancer-https
+   bind 0.0.0.0:443 ssl crt /etc/ssl/private/waterbutler.pem
+   reqadd X-Forwarded-Proto:\ https
+   default_backend waterbutler-servers
+{% endif %}
+
+
+backend waterbutler-servers
+{% if haproxy_force_https %}
+    redirect scheme https if !{ ssl_fc }
+{% endif %}
+
 {% for address in waterbutler_addresses %}{% set parentloop = loop %}{% for number in range(waterbutler_instances) %}
-    server waterbutler{{parentloop.index}}{{number}} {{address}}:{{waterbutler_start_port + number}} check
+    server waterbutler{{parentloop.index}}-{{number}} {{address}}:{{waterbutler_start_port + number}} check
 {% endfor %}{% endfor %}

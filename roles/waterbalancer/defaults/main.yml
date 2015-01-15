@@ -1,6 +1,13 @@
-newrelic_license_key: '...'
+haproxy_force_https: false
+haproxy_enable_https: false
 
-haproxy_config_dir: /opt/haproxy
+
+haproxy_stats_user: User1
+haproxy_stats_password: password
+
+
+waterbalancer_config_dir: /opt/haproxy
+
 
 waterbutler_instances: 2
 waterbutler_start_port: 7770
