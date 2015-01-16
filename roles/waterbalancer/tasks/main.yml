@@ -12,14 +12,25 @@
   tags:
     - update
 
-- name: Copy SSL cert
+
+- name: Copy SSL default certificate
   copy:
-    mode: 0755
-    src: waterbutler.pem
-    dest: "{{ haproxy_config_dir }}/waterbutler.pem"
+    mode: 0640
+    src: "{{ haproxy_default_cert_src }}"
+    dest: "{{ haproxy_config_dir }}/ssl/default.pem"
   tags:
     - update
-  when: haproxy_enable_https
+  when: haproxy_default_cert_src
+
+
+- name: Copy SSL certificates directory
+  copy:
+    mode: 0640
+    src: "{{ haproxy_certsd_dir_src }}"
+    dest: "{{ haproxy_config_dir }}/ssl/certs.d"
+  tags:
+    - update
+  when: haproxy_certsd_dir_src
 
 
 - name: Clean up old dockers
@@ -27,7 +38,6 @@
     image: "{{ item }}"
     state: absent
   with_items:
-    # - "ctlc/ambassador"
     - "centerforopenscience/haproxy:latest"
   tags:
     - update
@@ -35,17 +45,17 @@
 
 - name: Run HAProxy
   docker:
-    name: 'haproxy_1'
-    image: 'centerforopenscience/haproxy:latest'
+    name: haproxy_1
+    image: "centerforopenscience/haproxy:latest"
     expose:
       - 80
       - 443
     ports:
-      - '80:80'
-      - '443:443'
+      - "80:80"
+      - "443:443"
     volumes:
-      - '{{ haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro'
-      - '{{ haproxy_config_dir }}/waterbutler.pem:/etc/ssl/private/waterbutler.pem:ro'
+      - "{{ haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro"
+      - "{{ haproxy_config_dir }}/ssl:/etc/ssl/private:ro"
     restart_policy: always
   tags:
     - update

@@ -1,13 +1,11 @@
-haproxy_force_https: false
 haproxy_enable_https: false
-
+haproxy_default_cert_src: 
+haproxy_certsd_dir_src:
 
 haproxy_stats_user: User1
 haproxy_stats_password: password
 
-
 haproxy_config_dir: /opt/haproxy
-
 
 waterbutler_instances: 2
 waterbutler_start_port: 7770
