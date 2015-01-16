@@ -8,11 +8,3 @@
   hosts: waterbalancer
   roles:
     - role: waterbalancer
-
-
-- name: Make csf and docker work nicely
-  hosts:
-    - waterbutlers
-    - waterbalancer
-  roles:
-    - role: docker-csf
