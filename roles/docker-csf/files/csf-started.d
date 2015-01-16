@@ -9,7 +9,6 @@
 # Description:       csf needs to run before some upstart services can run
 ### END INIT INFO
 
-
 . /lib/lsb/init-functions
 
 case "$1" in

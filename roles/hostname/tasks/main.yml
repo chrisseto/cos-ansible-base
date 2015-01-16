@@ -1,9 +1,11 @@
-- debug:
-    msg: "ansible_hostname: {{ ansible_hostname }}"
+- name: ansible_hostname
+  debug:
+    msg: "{{ ansible_hostname }}"
 
 
-- debug:
-    msg: "hostname_name: {{ hostname_name }}"
+- name: hostname_name
+  debug:
+    msg: "{{ hostname_name }}"
 
 
 - name: Update the hostname

@@ -1,6 +1,6 @@
 haproxy_enable_https: false
-haproxy_default_cert_src: 
-haproxy_certsd_dir_src:
+haproxy_default_cert_src: ""
+haproxy_certsd_dir_src: ""
 
 haproxy_stats_user: User1
 haproxy_stats_password: password

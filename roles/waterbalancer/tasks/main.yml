@@ -1,7 +1,14 @@
-- name: Make settings directory
+- name: Ensure directories exist
   file:
     state: directory
-    path: "{{ haproxy_config_dir}}"
+    path: "{{ item }}"
+  with_items:
+    - "{{ haproxy_config_dir }}"
+    - "{{ haproxy_config_dir }}/ssl"
+    - "{{ haproxy_config_dir }}/ssl/certs.d"
+  tags:
+    - update
+    - settings
 
 
 - name: Copy settings
@@ -13,6 +20,16 @@
     - update
 
 
+# - name: haproxy_default_cert_src
+#   debug:
+#     msg: "{{ haproxy_default_cert_src }}"
+
+
+# - name: haproxy_default_cert_src
+#   debug:
+#     msg: "{{ haproxy_config_dir }}/ssl/default.pem"
+
+
 - name: Copy SSL default certificate
   copy:
     mode: 0640
@@ -20,7 +37,7 @@
     dest: "{{ haproxy_config_dir }}/ssl/default.pem"
   tags:
     - update
-  when: haproxy_default_cert_src
+  when: haproxy_default_cert_src | default("") != ""
 
 
 - name: Copy SSL certificates directory
@@ -30,17 +47,25 @@
     dest: "{{ haproxy_config_dir }}/ssl/certs.d"
   tags:
     - update
-  when: haproxy_certsd_dir_src
+  when: haproxy_certsd_dir_src | default("") != ""
 
 
-- name: Clean up old dockers
-  docker:
-    image: "{{ item }}"
-    state: absent
-  with_items:
-    - "centerforopenscience/haproxy:latest"
+- name: Delete docker containers
+  sudo: yes
+  shell: "docker rm -f $(docker ps -aq)"
+  ignore_errors: yes
   tags:
-    - update
+    - clean
+    - clean_containers
+
+
+- name: Delete docker images
+  sudo: yes
+  shell: "docker rmi -f $(docker images -q)"
+  ignore_errors: yes
+  tags:
+    - clean
+    - clean_images
 
 
 - name: Run HAProxy
@@ -50,12 +75,12 @@
     expose:
       - 80
       - 443
+    restart_policy: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - "{{ haproxy_config_dir }}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro"
-      - "{{ haproxy_config_dir }}/ssl:/etc/ssl/private:ro"
-    restart_policy: always
+      - "{{ haproxy_config_dir }}/ssl:/etc/ssl/private"
   tags:
     - update
