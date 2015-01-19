@@ -42,7 +42,7 @@ haproxy_enable_https: yes
 haproxy_default_cert_src: "{{ '~/.cos/ssl/osf.io.pem' | expanduser }}"
 # haproxy_certsd_dir_src: "{{ '~/.cos/ssl/certs.d' | expanduser }}"
 haproxy_backends:
-  - name: waterbutler
+  - name: waterbutler-staging
     domain: files-api-staging.osf.io
     servers:
       - ip: "192.168.0.1"
