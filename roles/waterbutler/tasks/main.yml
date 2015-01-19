@@ -16,7 +16,7 @@
 
 - name: Copy newrelic settings
   template:
-    mode: 0776
+    mode: 0770
     src: newrelic.ini.j2
     dest: "{{ waterbutler_config_dir }}/newrelic.ini"
   tags:
@@ -28,7 +28,7 @@
   copy:
     dest: "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json"
     src: "~/.cos/waterbutler-{{ waterbutler_env }}.json"
-    mode: 0776
+    mode: 0770
   tags:
     - update
     - settings
@@ -88,15 +88,15 @@
       - "{{ (waterbutler_start_port | int) + (item | int) - 1 }}:7777"
     env:
       ENV: "{{ waterbutler_env }}"
-      NEW_RELIC_CONFIG_FILE: /newrelic.ini
+      NEW_RELIC_CONFIG_FILE: /home/python/.cos/newrelic.ini
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
     restart_policy: always
     volumes:
       - "{{ waterbutler_osfstorage_pending_dir }}:/data/osfstorage/pending"
-      - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
-      - "{{ waterbutler_config_dir }}/newrelic.ini:/newrelic.ini:ro"
+      - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json"
+      - "{{ waterbutler_config_dir }}/newrelic.ini:/home/python/.cos/newrelic.ini"
   tags:
     - update
   with_sequence: "{{ waterbutler_instances }}"
@@ -111,14 +111,14 @@
     restart_policy: always
     env:
       ENV: "{{ waterbutler_env }}"
-      NEW_RELIC_CONFIG_FILE: /newrelic.ini
+      NEW_RELIC_CONFIG_FILE: /home/python/.cos/newrelic.ini
     links:
       - waterbutler_redis_1:redis
       - waterbutler_rabbitmq_1:rabbitmq
     volumes:
       - "{{ waterbutler_osfstorage_pending_dir }}:/data/osfstorage/pending"
       - "{{ waterbutler_osfstorage_complete_dir }}:/data/osfstorage/complete"
-      - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json:ro"
-      - "{{ waterbutler_config_dir }}/newrelic.ini:/newrelic.ini:ro"
+      - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json"
+      - "{{ waterbutler_config_dir }}/newrelic.ini:/home/python/.cos/newrelic.ini"
   tags:
     - update
