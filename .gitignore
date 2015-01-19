@@ -43,9 +43,7 @@ junk
 hosts
 .vagrant
 
-group_vars/upload-workers
-group_vars/waterbalancer
-group_vars/waterbutlers
+group_vars/*-*
 
 !.gitkeep
 

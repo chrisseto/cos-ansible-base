@@ -1,10 +1,4 @@
 - name: Set up waterbutler workers
-  hosts: waterbutlers
+  hosts: all
   roles:
     - role: waterbutler
-
-
-- name: Set up HAProxy
-  hosts: waterbalancer
-  roles:
-    - role: waterbalancer

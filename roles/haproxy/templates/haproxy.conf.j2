@@ -35,7 +35,9 @@ defaults
 frontend www-http
     bind 0.0.0.0:80
     reqadd X-Forwarded-Proto:\ http
-    default_backend www-backend
+    {% for backend in haproxy_backends %}
+    use_backend {{ backend['name'] }}-backend if { hdr(host) -i {{ backend['domain'] }} }
+    {% endfor %}
 {% else %}
 frontend www-http
     bind 0.0.0.0:80
@@ -45,13 +47,15 @@ frontend www-http
 frontend www-https
     bind 0.0.0.0:443 ssl crt /etc/ssl/private/default.pem crt /etc/ssl/private/certs.d ciphers ECDHE-RSA-AES256-SHA:RC4-SHA:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
     reqadd X-Forwarded-Proto:\ https
-    use_backend waterbutler-backend if { hdr(host) -i files-api-staging.osf.io }
+    {% for backend in haproxy_backends %}
+    use_backend {{ backend['name'] }}-backend if { hdr(host) -i {{ backend['domain'] }} }
+    {% endfor %}
 {% endif %}
 
 
-{% if waterbutler_addresses %}
-backend waterbutler-backend
-{% for address in waterbutler_addresses %}{% set parentloop = loop %}{% for number in range(waterbutler_instances) %}
-    server waterbutler{{parentloop.index}}-{{number}} {{address}}:{{waterbutler_start_port + number}} check
-{% endfor %}{% endfor %}
-{% endif %}
+{% for backend in haproxy_backends %}
+backend {{ backend['name'] }}-backend
+{% for server in backend['servers'] %}
+    server {{ server['ip'] }}-{{ server['port'] }} {{ server['ip'] }}:{{ server['port'] }} check
+{% endfor %}
+{% endfor %}

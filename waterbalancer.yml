@@ -1,0 +1,4 @@
+- name: Set up HAProxy
+  hosts: all
+  roles:
+    - role: haproxy
