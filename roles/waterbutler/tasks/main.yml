@@ -16,7 +16,7 @@
 
 - name: Copy newrelic settings
   template:
-    mode: 0770
+    mode: 0660
     src: newrelic.ini.j2
     dest: "{{ waterbutler_config_dir }}/newrelic.ini"
   tags:
@@ -28,10 +28,11 @@
   copy:
     dest: "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json"
     src: "~/.cos/waterbutler-{{ waterbutler_env }}.json"
-    mode: 0770
+    mode: 0660
   tags:
     - update
     - settings
+
 
 
 - name: Delete docker containers
@@ -54,9 +55,10 @@
 
 - name: Run Redis image
   docker:
+    name: waterbutler_redis_1
+    state: running
     image: "redis:latest"
     restart_policy: always
-    name: waterbutler_redis_1
     hostname: "{{ hostname_name }}-redis1"
     volumes:
       - "{{ waterbutler_redis_dir }}:/data"
@@ -66,9 +68,10 @@
 
 - name: Run RabbitMQ image
   docker:
-    restart_policy: always
     name: waterbutler_rabbitmq_1
+    state: running
     hostname: "{{ hostname_name }}-rabbit1"
+    restart_policy: always
     image: "centerforopenscience/rabbitmq:latest"
     volumes:
       - "{{ waterbutler_rabbitmq_dir }}:/var/lib/rabbitmq"
@@ -79,6 +82,7 @@
 - name: Run WaterButler Server image
   docker:
     name: "waterbutler_server_{{ item }}"
+    state: running
     hostname: "{{ hostname_name }}-server{{ item }}"
     image: "centerforopenscience/waterbutler:latest"
     command: "newrelic-admin run-program invoke server"
@@ -95,6 +99,7 @@
     restart_policy: always
     volumes:
       - "{{ waterbutler_osfstorage_pending_dir }}:/data/osfstorage/pending"
+      - "{{ waterbutler_osfstorage_complete_dir }}:/data/osfstorage/complete"
       - "{{ waterbutler_config_dir }}/waterbutler-{{ waterbutler_env }}.json:/home/python/.cos/waterbutler-{{ waterbutler_env }}.json"
       - "{{ waterbutler_config_dir }}/newrelic.ini:/home/python/.cos/newrelic.ini"
   tags:
@@ -105,6 +110,7 @@
 - name: Run WaterButler Celery image
   docker:
     name: waterbutler_celery_1
+    state: running
     hostname: "{{ hostname_name }}-celery1"
     image: "centerforopenscience/waterbutler:latest"
     command: "newrelic-admin run-program invoke celery"
